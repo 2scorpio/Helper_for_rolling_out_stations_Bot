@@ -37,13 +37,13 @@ while True:
     print(file)
     locate = os.path.dirname(__file__)
     print(locate)
-    pwd = os.path.join(locate, 'Metro.xlsx')
-    srv = os.path.join(locate, 'Server_FP.sql')
-    stat = os.path.join(locate, 'STATION.text')
-    ln = os.path.join(locate, 'Luna.text')
-    dl = os.path.join(locate, 'Delete_Server_FP.sql')
-    upnum = os.path.join(locate, 'UPDATE number.sql')
-    upcam = os.path.join(locate, 'UPDATE camera.sql')
+    pwd = os.path.join(locate, 'data', 'Metro.xlsx')
+    srv = os.path.join(locate, 'output', 'Server_FP.sql')
+    stat = os.path.join(locate, 'output', 'STATION.text')
+    ln = os.path.join(locate, 'output', 'Luna.text')
+    dl = os.path.join(locate, 'output', 'Delete_Server_FP.sql')
+    upnum = os.path.join(locate, 'output', 'UPDATE number.sql')
+    upcam = os.path.join(locate, 'output', 'UPDATE camera.sql')
     # register = pwd
     instances = []
     cameras = []
@@ -83,7 +83,7 @@ while True:
         stations.append(station)
         lines.append(line)
         numbers.append(number)
-        print(str(next(reversed(numbers))))
+        #print(str(next(reversed(numbers))))
 
     if day in [1, 2, 5, 6]:
         # Имя сервера
