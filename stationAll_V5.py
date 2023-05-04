@@ -15,9 +15,7 @@ import re
 from openpyxl import Workbook
 from openpyxl import load_workbook
 import openpyxl
-
-
-# from transliterate import translit
+from aiogram import Bot, Dispatcher, types
 
 
 def transliteration(text):
@@ -34,9 +32,7 @@ def transliteration(text):
 while True:
     # if __name__ == '__main__':
     file = __file__
-    print(file)
     locate = os.path.dirname(__file__)
-    print(locate)
     pwd = os.path.join(locate, 'data', 'Metro.xlsx')
     srv = os.path.join(locate, 'output', 'Server_FP.sql')
     stat = os.path.join(locate, 'output', 'STATION.text')
