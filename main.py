@@ -30,8 +30,8 @@ async def send_welcome(message: types.Message):
                         'после выбора одного из действий вы получите 3 файла конфигурации.'
                         )
     keyboard = types.InlineKeyboardMarkup()
-    keyboard.add(types.InlineKeyboardButton(text="Сформировать конфиги", callback_data="random_value"))
-    keyboard.add(types.InlineKeyboardButton(text="Обновить файл с серверами", callback_data="random_value"))
+    keyboard.add(types.InlineKeyboardButton(text="Сформировать конфиги", callback_data="CREATE_CONF"))
+    keyboard.add(types.InlineKeyboardButton(text="Обновить файл с серверами", callback_data="PUSH_FILE"))
     await message.answer("Итак! Что вы хотите?", reply_markup=keyboard)
 
 
@@ -40,11 +40,14 @@ async def send_welcome(message: types.Message):
 #     keyboard.add(*buttons)
 #     await message.answer("Итак! Что вы хотите?", reply_markup=keyboard)
 #
-# @dp.message_handler(commands='g')
-# async def cmd_random(message: types.Message):
-#     keyboard = types.InlineKeyboardMarkup()
-#     keyboard.add(types.InlineKeyboardButton(text="Нажми меня", callback_data="random_value"))
-#     await message.answer("Нажмите на кнопку, чтобы бот отправил число от 1 до 10", reply_markup=keyboard)
+
+file_filler = '' # Тот, кто последний залил файл
+@dp.callback_query_handler(text="PUSH_FILE")
+async def reload_file(call: types.CallbackQuery):
+    """Меняем файл"""
+    keyboard = types.InlineKeyboardMarkup()
+    keyboard.add(types.InlineKeyboardButton(text="Замена", callback_data="CREATE_CONF"))
+    #await message.answer("Отлично, загрузите файл", reply_markup=keyboard)
 
 @dp.message_handler()
 async def echo(message: types.Message):
