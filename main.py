@@ -1,5 +1,7 @@
+from aiogram.types import ReplyKeyboardRemove
 import logging
 import os
+
 
 from aiogram import executor, types
 from config import dp, bot
@@ -31,6 +33,7 @@ async def start_cmd(message: types.Message):
                         '<b>Итак! Что вы хотите?</b>',
                         reply_markup=kb_help
                         )
+    #await message.answer(reply_markup=ReplyKeyboardRemove())
     # await message.delete() # раскомитить после отладки
 
 
@@ -41,16 +44,9 @@ async def reload_file(callback: types.CallbackQuery):
                                       f'Последний файл был загружен <b>{file_filler}</b> <b>{last_date_load}</b>',
                                       reply_markup=kb_apply_load
                                       )
+        await bot.answer_callback_query(callback_query_id=callback.id) # Фиксим часы, отправляем боту ответ, что сообщение дошло
     else:
-        await callback.message.answer("CREATE_CONF")
-
-
-@dp.message_handler(content_types=["photo"])
-async def get_photo(message):
-    file_info = await bot.get_file(message.photo[-1].file_id)
-    locate = os.path.dirname(__file__)
-    pwd = os.path.join(locate, 'data', '111.JPEG')
-    await message.photo[-1].download(file_info.file_path.split('photos/')[1]) # ++
+        await callback.answer("CREATE_CONF")
 
 
 
@@ -59,9 +55,11 @@ async def get_photo(message):
 @dp.message_handler()
 async def echo(message: types.Message):
     await message.answer(
-        "Выберите одно из предложенных действий или воспользуйтесь командой /start."
+        "Выберите одно из предложенных действий или воспользуйтесь командой /start.",
+        reply_markup=ReplyKeyboardRemove()
     )
     await message.delete()
+
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)

@@ -1,7 +1,7 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
-kb_apply_load = ReplyKeyboardMarkup(resize_keyboard=True)
+kb_apply_load = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
 kb_apply_load_1 = KeyboardButton('Применить')
 kb_apply_load.add(kb_apply_load_1)
 
