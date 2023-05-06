@@ -1,17 +1,17 @@
 import logging
-from aiogram import Bot, Dispatcher, executor, types
+from aiogram import executor, types
 from config import dp
-from keyboards import kb_help, kb1
+from keyboards import kb_help
 
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 
 @dp.message_handler(commands=['start'])
-async def send_welcome(message: types.Message):
-    user = message.from_user # Обращаемсяк пользователю
+async def start_cmd(message: types.Message):
+    user = message.from_user # Обращаемся к пользователю
     username = user.username # Берём имя пользователя
-    await message.reply(
+    await message.answer(
                         f"Привет {username}, я могу:\n"
                         '1 - Добавить новый сервер\n'
                         '2 - Добавить камеры на действующий сервер\n'
@@ -22,10 +22,12 @@ async def send_welcome(message: types.Message):
                         '\n'
                         'Для работы со мной нужно загрузить актуальны файл Metro.xlsx, '
                         'в противном случае я буду использовать старые данные '
-                        'после выбора одного из действий вы получите 3 файла конфигурации.'
+                        'после выбора одного из действий вы получите 3 файла конфигурации.\n'
+                        '\n'
+                        'Итак! Что вы хотите?',
+                        reply_markup=kb_help
                         )
-    await message.answer("Итак! Что вы хотите?", reply_markup=kb1)
-    await message.delete()
+    # await message.delete() # раскомитить после отладки
 
 
 #     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
