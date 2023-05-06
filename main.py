@@ -1,18 +1,22 @@
 import logging
+import os
+
 from aiogram import executor, types
-from config import dp
-from keyboards import kb_help
+from config import dp, bot
+from keyboards import kb_help, kb_apply_load
 
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
+file_filler = 'лупа пупа' # Тот, кто последний залил файл
+last_date_load = '2023-05-06-20:22'
 
 @dp.message_handler(commands=['start'])
 async def start_cmd(message: types.Message):
     user = message.from_user # Обращаемся к пользователю
     username = user.username # Берём имя пользователя
     await message.answer(
-                        f"Привет {username}, я могу:\n"
+                        f"Привет <b>{username}</b>, я могу:\n"
                         '1 - Добавить новый сервер\n'
                         '2 - Добавить камеры на действующий сервер\n'
                         '3 - Изменить значение поля place_name (Только SQL)\n'
@@ -24,7 +28,7 @@ async def start_cmd(message: types.Message):
                         'в противном случае я буду использовать старые данные '
                         'после выбора одного из действий вы получите 3 файла конфигурации.\n'
                         '\n'
-                        'Итак! Что вы хотите?',
+                        '<b>Итак! Что вы хотите?</b>',
                         reply_markup=kb_help
                         )
     # await message.delete() # раскомитить после отладки
@@ -33,28 +37,31 @@ async def start_cmd(message: types.Message):
 @dp.callback_query_handler()
 async def reload_file(callback: types.CallbackQuery):
     if callback.data == "PUSH_FILE":
-        await callback.message.answer("Отлично, загрузите файл")
+        await callback.message.answer("Отлично, загрузите файл и нажмите кнопку применить\n"
+                                      f'Последний файл был загружен <b>{file_filler}</b> <b>{last_date_load}</b>',
+                                      reply_markup=kb_apply_load
+                                      )
     else:
-        await callback.message.answer("Выберите действие")
+        await callback.message.answer("CREATE_CONF")
+
+
+@dp.message_handler(content_types=["photo"])
+async def get_photo(message):
+    file_info = await bot.get_file(message.photo[-1].file_id)
+    locate = os.path.dirname(__file__)
+    pwd = os.path.join(locate, 'data', '111.JPEG')
+    await message.photo[-1].download(file_info.file_path.split('photos/')[1]) # ++
 
 
 
 
-file_filler = '' # Тот, кто последний залил файл
-# @dp.callback_query_handler(text="PUSH_FILE")
-# async def reload_file(call: types.CallbackQuery):
-#     """Меняем файл"""
-#     keyboard = types.InlineKeyboardMarkup()
-#     keyboard.add(types.InlineKeyboardButton(text="Замена", callback_data="CREATE_CONF"))
-#     await call.message.answer('работает', reply_markup=keyboard)
-#     # await message.answer("Итак! Что вы хотите?", reply_markup=keyboard)
-#     #await message.answer("Отлично, загрузите файл", reply_markup=keyboard)
 
 @dp.message_handler()
 async def echo(message: types.Message):
-    await message.reply(
+    await message.answer(
         "Выберите одно из предложенных действий или воспользуйтесь командой /start."
     )
+    await message.delete()
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)

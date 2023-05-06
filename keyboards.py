@@ -1,9 +1,9 @@
-#from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
-# kb1 = ReplyKeyboardMarkup(resize_keyboard=True)
-# b1 = KeyboardButton('/help')
-# kb1.add(b1)
+kb_apply_load = ReplyKeyboardMarkup(resize_keyboard=True)
+kb_apply_load_1 = KeyboardButton('Применить')
+kb_apply_load.add(kb_apply_load_1)
 
 kb_help = InlineKeyboardMarkup()
 kb_help_1 = InlineKeyboardButton(text="Сформировать конфиги",
