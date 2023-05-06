@@ -1,18 +1,13 @@
 import logging
 from aiogram import Bot, Dispatcher, executor, types
+from config import dp
+from keyboards import kb_help, kb1
 
-API_TOKEN = 'BOT TOKEN HERE'
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 
-# Initialize bot and dispatcher
-bot = Bot(token='5893532212:AAGZ7XlPlR7V8_OEfKP_4YniJnRL492FzHc')
-dp = Dispatcher(bot)
-
-### Face_Halper_Bot
-
-@dp.message_handler(commands=['помощь', 'help', 'start', 'го'])
+@dp.message_handler(commands=['start'])
 async def send_welcome(message: types.Message):
     user = message.from_user # Обращаемсяк пользователю
     username = user.username # Берём имя пользователя
@@ -29,10 +24,8 @@ async def send_welcome(message: types.Message):
                         'в противном случае я буду использовать старые данные '
                         'после выбора одного из действий вы получите 3 файла конфигурации.'
                         )
-    keyboard = types.InlineKeyboardMarkup()
-    keyboard.add(types.InlineKeyboardButton(text="Сформировать конфиги", callback_data="CREATE_CONF"))
-    keyboard.add(types.InlineKeyboardButton(text="Обновить файл с серверами", callback_data="PUSH_FILE"))
-    await message.answer("Итак! Что вы хотите?", reply_markup=keyboard)
+    await message.answer("Итак! Что вы хотите?", reply_markup=kb1)
+    await message.delete()
 
 
 #     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -41,13 +34,21 @@ async def send_welcome(message: types.Message):
 #     await message.answer("Итак! Что вы хотите?", reply_markup=keyboard)
 #
 
+@dp.callback_query_handler()
+async def reload_file(callback: types.CallbackQuery):
+    if callback == 'PUSH_FILE':
+        return await callback.message(text="Отлично, загрузите файл")
+    await callback.message("Отлично, загрузите файл")
+
 file_filler = '' # Тот, кто последний залил файл
-@dp.callback_query_handler(text="PUSH_FILE")
-async def reload_file(call: types.CallbackQuery):
-    """Меняем файл"""
-    keyboard = types.InlineKeyboardMarkup()
-    keyboard.add(types.InlineKeyboardButton(text="Замена", callback_data="CREATE_CONF"))
-    #await message.answer("Отлично, загрузите файл", reply_markup=keyboard)
+# @dp.callback_query_handler(text="PUSH_FILE")
+# async def reload_file(call: types.CallbackQuery):
+#     """Меняем файл"""
+#     keyboard = types.InlineKeyboardMarkup()
+#     keyboard.add(types.InlineKeyboardButton(text="Замена", callback_data="CREATE_CONF"))
+#     await call.message.answer('работает', reply_markup=keyboard)
+#     # await message.answer("Итак! Что вы хотите?", reply_markup=keyboard)
+#     #await message.answer("Отлично, загрузите файл", reply_markup=keyboard)
 
 @dp.message_handler()
 async def echo(message: types.Message):
