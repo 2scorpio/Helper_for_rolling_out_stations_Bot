@@ -30,17 +30,15 @@ async def start_cmd(message: types.Message):
     # await message.delete() # раскомитить после отладки
 
 
-#     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-#     buttons = ["Сформировать конфиги", "Обновить файл с данными"]
-#     keyboard.add(*buttons)
-#     await message.answer("Итак! Что вы хотите?", reply_markup=keyboard)
-#
-
 @dp.callback_query_handler()
 async def reload_file(callback: types.CallbackQuery):
-    if callback == 'PUSH_FILE':
-        return await callback.message(text="Отлично, загрузите файл")
-    await callback.message("Отлично, загрузите файл")
+    if callback.data == "PUSH_FILE":
+        await callback.message.answer("Отлично, загрузите файл")
+    else:
+        await callback.message.answer("Выберите действие")
+
+
+
 
 file_filler = '' # Тот, кто последний залил файл
 # @dp.callback_query_handler(text="PUSH_FILE")
@@ -55,7 +53,7 @@ file_filler = '' # Тот, кто последний залил файл
 @dp.message_handler()
 async def echo(message: types.Message):
     await message.reply(
-        "Выберите одно из предложенных действий или воспользуйтесь командой /help."
+        "Выберите одно из предложенных действий или воспользуйтесь командой /start."
     )
 
 if __name__ == '__main__':
