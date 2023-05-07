@@ -5,7 +5,7 @@ import os
 
 from aiogram import executor, types
 from config import dp, bot
-from keyboards import kb_help, kb_apply_load
+from keyboards import in_kb_help, kb_apply_load, in_kb_create_conf
 
 
 # Configure logging
@@ -31,22 +31,41 @@ async def start_cmd(message: types.Message):
                         'после выбора одного из действий вы получите 3 файла конфигурации.\n'
                         '\n'
                         '<b>Итак! Что вы хотите?</b>',
-                        reply_markup=kb_help
+                        reply_markup=in_kb_help
                         )
     #await message.answer(reply_markup=ReplyKeyboardRemove())
     # await message.delete() # раскомитить после отладки
 
 
-@dp.callback_query_handler()
+@dp.callback_query_handler(text="PUSH_FILE")
 async def reload_file(callback: types.CallbackQuery):
-    if callback.data == "PUSH_FILE":
-        await callback.message.answer("Отлично, загрузите файл и нажмите кнопку применить\n"
-                                      f'Последний файл был загружен <b>{file_filler}</b> <b>{last_date_load}</b>',
-                                      reply_markup=kb_apply_load
-                                      )
-        await bot.answer_callback_query(callback_query_id=callback.id) # Фиксим часы, отправляем боту ответ, что сообщение дошло
-    else:
-        await callback.answer("CREATE_CONF")
+    await callback.message.answer("Отлично, загрузите файл и нажмите кнопку применить\n"
+                                  f'Последний файл был загружен <b>{file_filler}</b> <b>{last_date_load}</b>',
+                                  reply_markup=kb_apply_load
+                                  )
+    await bot.answer_callback_query(callback_query_id=callback.id) # Фиксим часы, отправляем боту ответ, что сообщение дошло
+    await callback.message.delete()
+@dp.callback_query_handler(text="CREATE_CONF")
+async def create_config(callback: types.CallbackQuery):
+    await callback.message.answer("Выберите предложенное дейсвите:",
+                                  reply_markup=in_kb_create_conf
+                                  )
+    await bot.answer_callback_query(callback_query_id=callback.id)  # Фиксим часы, отправляем боту ответ, что сообщение дошло
+    await callback.message.delete()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
