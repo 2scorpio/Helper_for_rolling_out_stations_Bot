@@ -33,8 +33,7 @@ async def start_cmd(message: types.Message):
                         '<b>Итак! Что вы хотите?</b>',
                         reply_markup=in_kb_help
                         )
-    #await message.answer(reply_markup=ReplyKeyboardRemove())
-    # await message.delete() # раскомитить после отладки
+    await message.delete() # раскомитить после отладки
 
 
 @dp.callback_query_handler(text="PUSH_FILE")
@@ -45,6 +44,7 @@ async def reload_file(callback: types.CallbackQuery):
                                   )
     await bot.answer_callback_query(callback_query_id=callback.id) # Фиксим часы, отправляем боту ответ, что сообщение дошло
     await callback.message.delete()
+
 @dp.callback_query_handler(text="CREATE_CONF")
 async def create_config(callback: types.CallbackQuery):
     await callback.message.answer("Выберите предложенное дейсвите:",
@@ -53,7 +53,8 @@ async def create_config(callback: types.CallbackQuery):
     await bot.answer_callback_query(callback_query_id=callback.id)  # Фиксим часы, отправляем боту ответ, что сообщение дошло
     await callback.message.delete()
 
-
+# @dp.callback_query_handler(text="back")
+# async def
 
 
 
