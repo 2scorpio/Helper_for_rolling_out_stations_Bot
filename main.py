@@ -40,13 +40,14 @@ async def start_cmd(message: types.Message):
     await message.delete() # раскомитить после отладки
 
 
+
 @dp.callback_query_handler(text="back")
 async def go_home_callback(callback: types.CallbackQuery):
     """ Дублирует start_cmd, для кнопки назад """
     await callback.message.answer(start_massage, reply_markup=in_kb_help)
     await bot.answer_callback_query(callback_query_id=callback.id)  # Фиксим часы, отправляем боту ответ, что сообщение дошло
-    # await callback.message.edit_reply_markup() # Удаляет клаву при нажатии
-    await callback.message.delete() # удаляет сообщение
+    await callback.message.edit_reply_markup() # Удаляет клаву при нажатии
+    # await callback.message.delete() # удаляет сообщение
 
 
 @dp.callback_query_handler(text="PUSH_FILE")
@@ -57,8 +58,8 @@ async def reload_file(callback: types.CallbackQuery):
                                   reply_markup=kb_apply_load
                                   )
     await bot.answer_callback_query(callback_query_id=callback.id) # Фиксим часы, отправляем боту ответ, что сообщение дошло
-    await callback.message.delete() # удаляет сообщение
-    # await callback.message.edit_reply_markup()  # Удаляет клаву при нажатии
+    # await callback.message.delete() # удаляет сообщение
+    await callback.message.edit_reply_markup()  # Удаляет клаву при нажатии
 
 
 @dp.callback_query_handler(text="CREATE_CONF")
@@ -68,8 +69,8 @@ async def create_config(callback: types.CallbackQuery):
                                   reply_markup=in_kb_create_conf
                                   )
     await bot.answer_callback_query(callback_query_id=callback.id)  # Фиксим часы, отправляем боту ответ, что сообщение дошло
-    await callback.message.delete() # удаляет сообщение
-    # await callback.message.edit_reply_markup()  # Удаляет клаву при нажатии
+    # await callback.message.delete() # удаляет сообщение
+    await callback.message.edit_reply_markup()  # Удаляет клаву при нажатии
 
 
 @dp.message_handler(content_types=ContentTypes.DOCUMENT)
@@ -101,14 +102,17 @@ async def download_xlsx(file: types.File):
 #     )
 #     await message.delete()
 @dp.message_handler()
-async def go_home_callback(message: types.Message):
+async def go_home_callback(msg: types.Message):
     """ Эхо """
-    await message.answer(start_massage, reply_markup=in_kb_help)
+    await msg.answer(start_massage, reply_markup=in_kb_help)
     #await bot.answer_callback_query(callback_query_id=callback.id)  # Фиксим часы, отправляем боту ответ, что сообщение дошло
-    # await callback.message.edit_reply_markup() # Удаляет клаву при нажатии
-    await message.delete() # удаляет сообщение
-
-
+    await msg.delete() # удаляет сообщение
+    """ Удаление инлай клавиатуры """
+    chat_id = msg.chat.id
+    message_id = msg.message_id - 1  # Идентификатор предыдущего сообщения
+    reply_markup = types.InlineKeyboardMarkup() # Создаем пустую клавиатуру
+    await bot.edit_message_reply_markup(chat_id=chat_id, message_id=message_id, reply_markup=reply_markup) # Отправляем отредактированное сообщение с пустой клавиатурой
+    """ Удаление инлай клавиатуры """
 
 
 if __name__ == '__main__':
