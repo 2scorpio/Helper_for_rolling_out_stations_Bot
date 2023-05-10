@@ -3,10 +3,9 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 
 ##################################
-kb_apply_load = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
-kb_apply_load_1 = KeyboardButton('Применить')
-kb_apply_load_2 = KeyboardButton('Назад')
-kb_apply_load.add(kb_apply_load_1, kb_apply_load_2)
+kb_apply_load = InlineKeyboardMarkup()
+kb_apply_load.add(InlineKeyboardButton(text="Применить", callback_data="apply"))
+kb_apply_load.add(InlineKeyboardButton(text="Назад", callback_data="back"))
 ##################################
 
 ##################################

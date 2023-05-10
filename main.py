@@ -31,25 +31,20 @@ last_date_load = '2023-05-06-20:22'
 
 
 
-
 @dp.message_handler(commands=['start'])
 async def start_cmd(message: types.Message):
     """ Стартовое приветсвие """
     user = message.from_user # Обращаемся к пользователю
     username = user.username # Берём имя пользователя
     await message.answer(start_massage, reply_markup=in_kb_help)
+    await message.answer("", reply_markup=types.ReplyKeyboardRemove())
     # await message.delete() # раскомитить после отладки
 
 @dp.callback_query_handler(text="back")
 async def go_home_callback(callback: types.CallbackQuery):
     """ Дублирует start_cmd, для кнопки назад """
-    await callback.message.answer(start_massage,reply_markup=in_kb_help)
+    await callback.message.answer(start_massage, reply_markup=in_kb_help)
     await bot.answer_callback_query(callback_query_id=callback.id)  # Фиксим часы, отправляем боту ответ, что сообщение дошло
-
-@dp.message_handler(text="Назад")
-async def go_home_message(message: types.Message):
-    await start_cmd(message)
-    await message.delete()
 
 
 @dp.callback_query_handler(text="PUSH_FILE")
