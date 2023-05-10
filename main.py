@@ -24,13 +24,11 @@ start_massage = 'Привет <b> !Добавить имя! </b>, я могу:\n
 
 
 
-
-
-
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 file_filler = 'лупа пупа' # Тот, кто последний залил файл
 last_date_load = '2023-05-06-20:22'
+
 
 
 
@@ -43,10 +41,15 @@ async def start_cmd(message: types.Message):
     # await message.delete() # раскомитить после отладки
 
 @dp.callback_query_handler(text="back")
-async def start_cmd_callback(callback: types.CallbackQuery):
+async def go_home_callback(callback: types.CallbackQuery):
     """ Дублирует start_cmd, для кнопки назад """
     await callback.message.answer(start_massage,reply_markup=in_kb_help)
     await bot.answer_callback_query(callback_query_id=callback.id)  # Фиксим часы, отправляем боту ответ, что сообщение дошло
+
+@dp.message_handler(text="Назад")
+async def go_home_message(message: types.Message):
+    await start_cmd(message)
+    await message.delete()
 
 
 @dp.callback_query_handler(text="PUSH_FILE")
@@ -70,10 +73,6 @@ async def create_config(callback: types.CallbackQuery):
     #await callback.message.delete()
 
 
-# @dp.callback_query_handler(text="back")
-# async def back(callback: types.CallbackQuery):
-#     """ Обработчик кнопки назад """
-#     await callback.message.answer()
 
 
 
