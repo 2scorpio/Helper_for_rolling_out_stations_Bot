@@ -1,4 +1,4 @@
-from aiogram.types import ReplyKeyboardRemove
+from aiogram.types import ReplyKeyboardRemove, ContentTypes
 import logging
 import os
 
@@ -37,25 +37,28 @@ async def start_cmd(message: types.Message):
     user = message.from_user # Обращаемся к пользователю
     username = user.username # Берём имя пользователя
     await message.answer(start_massage, reply_markup=in_kb_help)
-    await message.answer("", reply_markup=types.ReplyKeyboardRemove())
-    # await message.delete() # раскомитить после отладки
+    await message.delete() # раскомитить после отладки
+
 
 @dp.callback_query_handler(text="back")
 async def go_home_callback(callback: types.CallbackQuery):
     """ Дублирует start_cmd, для кнопки назад """
     await callback.message.answer(start_massage, reply_markup=in_kb_help)
     await bot.answer_callback_query(callback_query_id=callback.id)  # Фиксим часы, отправляем боту ответ, что сообщение дошло
+    # await callback.message.edit_reply_markup() # Удаляет клаву при нажатии
+    await callback.message.delete() # удаляет сообщение
 
 
 @dp.callback_query_handler(text="PUSH_FILE")
 async def reload_file(callback: types.CallbackQuery):
-    """ Загрузчик файлов """
+    """ Загрузчик файла """
     await callback.message.answer("Отлично, загрузите файл и нажмите кнопку применить\n"
                                   f'Последний файл был загружен <b>{file_filler}</b> <b>{last_date_load}</b>',
                                   reply_markup=kb_apply_load
                                   )
     await bot.answer_callback_query(callback_query_id=callback.id) # Фиксим часы, отправляем боту ответ, что сообщение дошло
-    #await callback.message.delete()
+    await callback.message.delete() # удаляет сообщение
+    # await callback.message.edit_reply_markup()  # Удаляет клаву при нажатии
 
 
 @dp.callback_query_handler(text="CREATE_CONF")
@@ -65,7 +68,16 @@ async def create_config(callback: types.CallbackQuery):
                                   reply_markup=in_kb_create_conf
                                   )
     await bot.answer_callback_query(callback_query_id=callback.id)  # Фиксим часы, отправляем боту ответ, что сообщение дошло
-    #await callback.message.delete()
+    await callback.message.delete() # удаляет сообщение
+    # await callback.message.edit_reply_markup()  # Удаляет клаву при нажатии
+
+
+@dp.message_handler(content_types=ContentTypes.DOCUMENT)
+async def download_xlsx(file: types.File):
+    if file == 'Metro.xlsx':
+        destination = r"C:\Metro.xlsx"
+
+        await file.download(destination)
 
 
 
@@ -80,17 +92,23 @@ async def create_config(callback: types.CallbackQuery):
 
 
 
-
-
-
+# @dp.message_handler()
+# async def echo(message: types.Message):
+#     """ Эхо """
+#     await message.answer(
+#         "Выберите одно из предложенных действий или воспользуйтесь командой /start.",
+#         reply_markup=ReplyKeyboardRemove()
+#     )
+#     await message.delete()
 @dp.message_handler()
-async def echo(message: types.Message):
+async def go_home_callback(message: types.Message):
     """ Эхо """
-    await message.answer(
-        "Выберите одно из предложенных действий или воспользуйтесь командой /start.",
-        reply_markup=ReplyKeyboardRemove()
-    )
-    await message.delete()
+    await message.answer(start_massage, reply_markup=in_kb_help)
+    #await bot.answer_callback_query(callback_query_id=callback.id)  # Фиксим часы, отправляем боту ответ, что сообщение дошло
+    # await callback.message.edit_reply_markup() # Удаляет клаву при нажатии
+    await message.delete() # удаляет сообщение
+
+
 
 
 if __name__ == '__main__':
