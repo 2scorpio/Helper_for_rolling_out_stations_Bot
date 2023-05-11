@@ -7,6 +7,8 @@ from aiogram import executor, types
 from config import dp, bot
 from keyboards import in_kb_help, kb_apply_load1, in_kb_create_conf, kb_apply_load2
 
+logging.basicConfig(level=logging.INFO)
+
 start_massage = 'Привет <b> !Добавить имя! </b>, я могу:\n'\
                 "1 - Добавить новый сервер\n" \
                 "2 - Добавить камеры на действующий сервер\n"\
@@ -24,13 +26,16 @@ start_massage = 'Привет <b> !Добавить имя! </b>, я могу:\n
 
 
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
+
+""" Глобальные переменые """
 file_filler = 'лупа пупа' # Тот, кто последний залил файл
 last_date_load = '2023-05-06-20:22'
 upload_flag = False # Флаг загрузки
+locate = os.path.dirname(__file__)
 
-""" Удаление инлай клавиатуры с предыдущего сообщения для message_handler """
+
+
+""" Функции кторые потом перенсти """
 async def delete_in_keyboard(msg):
     await msg.delete()  # удаляет сообщение
     """ Удаление инлай клавиатуры с предыдущего сообщения для message_handler """
@@ -111,12 +116,14 @@ async def process_xlsx(message: types.Message):
     if upload_flag:
         if message.document.mime_type == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': #and message.document.file_name == 'Metro.xlsx': - Проверка по имени
             file_id = message.document.file_id
-            file_name = message.document.file_name
+            # file_name = message.document.file_name # Загрузит с оригинальным именем
+            file_name = 'Metro.xlsx' # Переопределяем имя
             # Скачиваем файл
             file_path = await bot.get_file(file_id)
             downloaded_file = await bot.download_file(file_path.file_path)
+            file = os.path.join(locate, 'temp', file_name)
             # Сохраняем файл на сервере
-            with open(file_name, 'wb') as f:
+            with open(file, 'wb') as f:
                 f.write(downloaded_file.read())
             await message.answer('Файл успешно загружен, выберите действие.', reply_markup=kb_apply_load2)
             await delete_in_keyboard(message)
