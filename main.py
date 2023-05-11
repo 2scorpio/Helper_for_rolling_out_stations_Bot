@@ -97,6 +97,15 @@ async def reload_file(callback: types.CallbackQuery):
     await callback.message.edit_reply_markup()  # Удаляет клаву при нажатии
 
 
+@dp.callback_query_handler(text="download_reference_file")
+async def reload_file(callback: types.CallbackQuery):
+    """ Скачивание файла референса"""
+    file_ref_locate = os.path.join(locate, 'reference_files', 'Metro.xlsx')
+    with open(file_ref_locate, 'rb') as file:
+        await bot.send_document(callback.from_user.id, file)
+    await bot.answer_callback_query(callback_query_id=callback.id) # Фиксим часы, отправляем боту ответ, что сообщение дошло
+
+
 
 @dp.callback_query_handler(text="CREATE_CONF")
 async def create_config(callback: types.CallbackQuery):
@@ -146,21 +155,20 @@ async def process_xlsx(message: types.Message):
 
 
 
-# @dp.message_handler()
-# async def echo(message: types.Message):
-#     """ Эхо """
-#     await message.answer(
-#         "Выберите одно из предложенных действий или воспользуйтесь командой /start.",
-#         reply_markup=ReplyKeyboardRemove()
-#     )
-#     await message.delete()
+
+@dp.callback_query_handler(text="4444")
+async def create_config(callback: types.CallbackQuery):
+    """ Заглушка """
+    await callback.answer('Сорри, разработчика скорее всего заставляют работать другую бесполезную работу, выберите пока что ни будь другое. Спасибо за понимание.', show_alert=True)
+
 @dp.message_handler()
 async def go_home_callback(msg: types.Message):
     """ Эхо """
     await upload_flag_off()
     await msg.answer(start_massage, reply_markup=in_kb_help)
     #await bot.answer_callback_query(callback_query_id=callback.id)  # Фиксим часы, отправляем боту ответ, что сообщение дошло
-    await delete_in_keyboard(msg)
+    if types.InlineKeyboardMarkup():
+        await delete_in_keyboard(msg)
 
 
 if __name__ == '__main__':
