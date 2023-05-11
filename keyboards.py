@@ -3,9 +3,12 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 
 ##################################
-kb_apply_load = InlineKeyboardMarkup()
-kb_apply_load.add(InlineKeyboardButton(text="Применить", callback_data="apply"))
-kb_apply_load.add(InlineKeyboardButton(text="Назад", callback_data="back"))
+kb_apply_load1 = InlineKeyboardMarkup()
+kb_apply_load1.add(InlineKeyboardButton(text="Назад", callback_data="back"))
+
+kb_apply_load2 = InlineKeyboardMarkup()
+kb_apply_load2.add(InlineKeyboardButton(text="Применить", callback_data="apply"))
+kb_apply_load2.add(InlineKeyboardButton(text="Оставить старый файл", callback_data="back"))
 ##################################
 
 ##################################
