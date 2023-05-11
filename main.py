@@ -28,7 +28,7 @@ start_massage = 'Привет <b> !Добавить имя! </b>, я могу:\n
 logging.basicConfig(level=logging.INFO)
 file_filler = 'лупа пупа' # Тот, кто последний залил файл
 last_date_load = '2023-05-06-20:22'
-upload_flag = True # Флаг загрузки
+upload_flag = False # Флаг загрузки
 
 """ Удаление инлай клавиатуры с предыдущего сообщения для message_handler """
 async def delete_in_keyboard(msg):
@@ -41,6 +41,16 @@ async def delete_in_keyboard(msg):
                                         reply_markup=reply_markup)  # Отправляем отредактированное сообщение с пустой клавиатурой
 
 
+async def upload_flag_off():
+    """ Выключает флаг загрузки, должа быть установлена каждую функцию, кроме меню загрузки файла """
+    global upload_flag
+    upload_flag = False
+
+async def upload_flag_on():
+    """ Включает флаг загрузки """
+    global upload_flag
+    upload_flag = True
+
 
 """ Функции кторые потом перенсти """
 
@@ -51,6 +61,7 @@ async def delete_in_keyboard(msg):
 @dp.message_handler(commands=['start'])
 async def start_cmd(message: types.Message):
     """ Стартовое приветсвие """
+    await upload_flag_off()
     # user = message.from_user # Обращаемся к пользователю
     # username = user.username # Берём имя пользователя
     await message.answer(start_massage, reply_markup=in_kb_help)
@@ -61,6 +72,7 @@ async def start_cmd(message: types.Message):
 @dp.callback_query_handler(text="back")
 async def go_home_callback(callback: types.CallbackQuery):
     """ Дублирует start_cmd, для кнопки назад """
+    await upload_flag_off()
     await callback.message.answer(start_massage, reply_markup=in_kb_help)
     await bot.answer_callback_query(callback_query_id=callback.id)  # Фиксим часы, отправляем боту ответ, что сообщение дошло
     await callback.message.edit_reply_markup() # Удаляет клаву при нажатии
@@ -69,8 +81,9 @@ async def go_home_callback(callback: types.CallbackQuery):
 
 @dp.callback_query_handler(text="PUSH_FILE")
 async def reload_file(callback: types.CallbackQuery):
-    """ Загрузчик файла """
-    await callback.message.answer("Отлично, загрузите файл\n"
+    """ Загрузчик файла, меню 1"""
+    await upload_flag_on()
+    await callback.message.answer("Отлично, бот ожидает загрузи, загрузите файл\n"
                                   f'Последний файл был загружен <b>{file_filler}</b> <b>{last_date_load}</b>',
                                   reply_markup=kb_apply_load1
                                   )
@@ -79,9 +92,11 @@ async def reload_file(callback: types.CallbackQuery):
     await callback.message.edit_reply_markup()  # Удаляет клаву при нажатии
 
 
+
 @dp.callback_query_handler(text="CREATE_CONF")
 async def create_config(callback: types.CallbackQuery):
     """ Создать коонфиги """
+    await upload_flag_off()
     await callback.message.answer("Выберите предложенное дейсвите:",
                                   reply_markup=in_kb_create_conf
                                   )
@@ -92,7 +107,7 @@ async def create_config(callback: types.CallbackQuery):
 
 @dp.message_handler(content_types=types.ContentTypes.DOCUMENT)
 async def process_xlsx(message: types.Message):
-    """ Загрузка документа """
+    """ Загрузка файла, меню 2 """
     if upload_flag:
         if message.document.mime_type == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': #and message.document.file_name == 'Metro.xlsx': - Проверка по имени
             file_id = message.document.file_id
@@ -135,6 +150,7 @@ async def process_xlsx(message: types.Message):
 @dp.message_handler()
 async def go_home_callback(msg: types.Message):
     """ Эхо """
+    await upload_flag_off()
     await msg.answer(start_massage, reply_markup=in_kb_help)
     #await bot.answer_callback_query(callback_query_id=callback.id)  # Фиксим часы, отправляем боту ответ, что сообщение дошло
     await delete_in_keyboard(msg)
