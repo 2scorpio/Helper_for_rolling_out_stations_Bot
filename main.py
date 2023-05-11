@@ -1,14 +1,20 @@
 from aiogram.types import ReplyKeyboardRemove, ContentTypes
 import logging
 import os
+import shutil
+
 
 
 from aiogram import executor, types
+from aiogram.utils.exceptions import MessageNotModified, MessageToDeleteNotFound
+
 from config import dp, bot
 from keyboards import in_kb_help, kb_apply_load1, in_kb_create_conf, kb_apply_load2
 
 logging.basicConfig(level=logging.INFO)
 
+
+""" Глобальные переменые """
 start_massage = 'Привет <b> !Добавить имя! </b>, я могу:\n'\
                 "1 - Добавить новый сервер\n" \
                 "2 - Добавить камеры на действующий сервер\n"\
@@ -24,14 +30,12 @@ start_massage = 'Привет <b> !Добавить имя! </b>, я могу:\n
                 "<b>Итак! Что вы хотите?</b>"
 
 
-
-
-
-""" Глобальные переменые """
 file_filler = 'лупа пупа' # Тот, кто последний залил файл
 last_date_load = '2023-05-06-20:22'
 upload_flag = False # Флаг загрузки
 locate = os.path.dirname(__file__)
+
+
 
 
 
@@ -98,7 +102,7 @@ async def reload_file(callback: types.CallbackQuery):
 
 
 @dp.callback_query_handler(text="download_reference_file")
-async def reload_file(callback: types.CallbackQuery):
+async def reload_file_1(callback: types.CallbackQuery):
     """ Скачивание файла референса"""
     file_ref_locate = os.path.join(locate, 'reference_files', 'Metro.xlsx')
     with open(file_ref_locate, 'rb') as file:
@@ -120,15 +124,14 @@ async def create_config(callback: types.CallbackQuery):
 
 
 @dp.message_handler(content_types=types.ContentTypes.DOCUMENT)
-async def process_xlsx(message: types.Message):
+async def reload_file_2(message: types.Message):
     """ Загрузка файла, меню 2 """
     if upload_flag:
         if message.document.mime_type == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': #and message.document.file_name == 'Metro.xlsx': - Проверка по имени
             file_id = message.document.file_id
             # file_name = message.document.file_name # Загрузит с оригинальным именем
             file_name = 'Metro.xlsx' # Переопределяем имя
-            # Скачиваем файл
-            file_path = await bot.get_file(file_id)
+            file_path = await bot.get_file(file_id)  # Скачиваем файл
             downloaded_file = await bot.download_file(file_path.file_path)
             file = os.path.join(locate, 'temp', file_name)
             # Сохраняем файл на сервере
@@ -139,6 +142,22 @@ async def process_xlsx(message: types.Message):
         else:
             await message.answer('Пожалуйста, загрузите файл в формате XLSX.')
             await delete_in_keyboard(message)
+
+
+@dp.callback_query_handler(text="moving_file")
+async def reload_file_3(callback: types.CallbackQuery):
+    """ Заменят старый файл на новый """
+    file = os.path.join(locate, 'temp', 'Metro.xlsx')
+    destination_folder = os.path.join(locate, 'data', 'Metro.xlsx')
+    try:
+        await shutil.move(file, destination_folder)
+    except FileNotFoundError:
+        await callback.answer('Упс, сообщите разработчику, что временный файл протерялся и его обновить не удалось.', show_alert=True)
+    await go_home_callback(callback)
+
+
+
+
 
 
 
@@ -159,17 +178,17 @@ async def process_xlsx(message: types.Message):
 @dp.callback_query_handler(text="4444")
 async def create_config(callback: types.CallbackQuery):
     """ Заглушка """
-    await callback.answer('Сорри, разработчика скорее всего заставляют работать другую бесполезную работу, выберите пока что ни будь другое. Спасибо за понимание.', show_alert=True)
+    await callback.answer('Сорри, разработчика, скорее всего, заставляют работать другую бесполезную работу, выберите пока что ни будь другое. Спасибо за понимание.', show_alert=True)
 
 @dp.message_handler()
-async def go_home_callback(msg: types.Message):
+async def go_home_message(msg: types.Message):
     """ Эхо """
     await upload_flag_off()
     await msg.answer(start_massage, reply_markup=in_kb_help)
-    #await bot.answer_callback_query(callback_query_id=callback.id)  # Фиксим часы, отправляем боту ответ, что сообщение дошло
-    if types.InlineKeyboardMarkup():
+    try:
+        await delete_in_keyboard(msg) # Тут возникает ошибка, если нет предыдущей инлайн клавы, её нужно обраотать
+    except MessageNotModified:
         await delete_in_keyboard(msg)
-
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)

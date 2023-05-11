@@ -9,7 +9,7 @@ kb_apply_load1.add(InlineKeyboardButton(text="Скачать образец", ca
 
 
 kb_apply_load2 = InlineKeyboardMarkup()
-kb_apply_load2.add(InlineKeyboardButton(text="Применить файл", callback_data="4444")) # callback_data="apply"))
+kb_apply_load2.add(InlineKeyboardButton(text="Применить файл", callback_data="moving_file")) # callback_data="apply"))
 kb_apply_load2.add(InlineKeyboardButton(text="Оставить старый файл", callback_data="back"))
 ##################################
 
