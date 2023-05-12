@@ -1,0 +1,43 @@
+""" Общие функции и глобальные переменные """
+from aiogram.types import ReplyKeyboardRemove, ContentTypes
+import logging
+import os
+import shutil
+
+
+from aiogram import executor, types
+from config import dp, bot
+from keyboards import in_kb_help, kb_apply_load1, in_kb_create_conf, kb_apply_load2
+
+
+upload_flag = False # Флаг загрузки
+locate = os.path.dirname(__file__)
+
+
+async def delete_inline_button_in_message_handler(msg):
+    await msg.delete()  # удаляет сообщение
+    """ Удаление инлай клавиатуры с предыдущего сообщения для message_handler """
+    chat_id = msg.chat.id
+    message_id = msg.message_id - 1  # Идентификатор предыдущего сообщения
+    reply_markup = types.InlineKeyboardMarkup()  # Создаем пустую клавиатуру
+    await bot.edit_message_reply_markup(chat_id=chat_id, message_id=message_id, reply_markup=reply_markup)  # Отправляем отредактированное сообщение с пустой клавиатурой
+
+
+async def upload_flag_off():
+    """ Выключает флаг загрузки, должа быть установлена каждую функцию, кроме меню загрузки файла """
+    global upload_flag
+    upload_flag = False
+
+
+async def upload_flag_on():
+    """ Включает флаг загрузки """
+    global upload_flag
+    upload_flag = True
+
+
+async def go_home_start_menu(callback: types.CallbackQuery):
+    """ Кнопка назад стартового меню """
+    await upload_flag_off()
+    await callback.message.answer("Как будет дейтсвовать хацкер?", reply_markup=in_kb_help)
+    await bot.answer_callback_query(callback_query_id=callback.id)  # Фиксим часы, отправляем боту ответ, что сообщение дошло
+    await callback.message.edit_reply_markup() # Удаляет клавиатуру при нажатии

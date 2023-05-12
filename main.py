@@ -12,7 +12,7 @@ from config import dp, bot
 from keyboards import in_kb_help, kb_apply_load1, in_kb_create_conf, kb_apply_load2
 
 logging.basicConfig(level=logging.INFO)
-
+# <b>  </b>
 
 """ Глобальные переменые """
 start_massage = 'Привет <b> !Добавить имя! </b>, я могу:\n'\
@@ -78,7 +78,7 @@ async def start_cmd(message: types.Message):
 
 
 
-@dp.callback_query_handler(text="back")
+@dp.callback_query_handler(text="back") # Перенёс
 async def go_home_callback(callback: types.CallbackQuery):
     """ Дублирует start_cmd, для кнопки назад """
     await upload_flag_off()
@@ -185,10 +185,8 @@ async def go_home_message(msg: types.Message):
     """ Эхо """
     await upload_flag_off()
     await msg.answer(start_massage, reply_markup=in_kb_help)
-    try:
-        await delete_in_keyboard(msg) # Тут возникает ошибка, если нет предыдущей инлайн клавы, её нужно обраотать
-    except MessageNotModified:
-        await delete_in_keyboard(msg)
+    await delete_in_keyboard(msg) # Тут возникает ошибка, если нет предыдущей инлайн клавы, её нужно обраотать
+
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)
