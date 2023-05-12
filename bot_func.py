@@ -26,7 +26,7 @@ async def delete_inline_button_in_message_handler(msg):
 
 
 async def upload_flag_off():
-    """ Выключает флаг загрузки, должа быть установлена каждую функцию, кроме меню загрузки файла """
+    """ Выключает флаг загрузки, должна быть установлена каждую функцию, кроме меню загрузки файла """
     global upload_flag
     upload_flag = False
 

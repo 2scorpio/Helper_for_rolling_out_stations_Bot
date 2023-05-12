@@ -19,11 +19,11 @@ logging.basicConfig(level=logging.INFO)
 
 
 @dp.message_handler(commands=['start'])
-async def first_blood(message: types.Message):
+async def first_blood(msg: types.Message):
     """ Функция для 1‑го запуска """
     await upload_flag_off()
-    await message.answer(start_massage, reply_markup=inline_kbr_start_menu)
-    await message.delete() # удаляет предыдущее сообщение пользователя
+    await msg.answer(start_massage, reply_markup=inline_kbr_start_menu)
+    await msg.delete() # удаляет предыдущее сообщение пользователя
 
 
 @dp.callback_query_handler(lambda query: query.data.startswith('call_'))
@@ -77,8 +77,15 @@ async def listen_file_downloads(msg: types.Message):
 @dp.message_handler()
 async def go_home_message(msg: types.Message):
     """ Эхо функция """
-    await first_blood(msg) # Тут нужно обработать ошибку по стартовой команде
-    await delete_inline_button_in_message_handler(msg) # Тут возникает ошибка, если нет предыдущей инлайн клавиатуры, её нужно обраотать
+    await upload_flag_off()
+    await msg.answer(start_massage, reply_markup=inline_kbr_start_menu)
+    await msg.delete()  # удаляет предыдущее сообщение пользователя
+    chat_id = msg.chat.id
+    message_id = msg.message_id - 1  # Идентификатор предыдущего сообщения
+    reply_markup = types.InlineKeyboardMarkup()  # Создаем пустую клавиатуру
+    await bot.edit_message_reply_markup(chat_id=chat_id, message_id=message_id,
+                                        reply_markup=reply_markup)  # Отправляем отредактированное сообщение с пустой клавиатурой
+
 
 
 if __name__ == '__main__':
