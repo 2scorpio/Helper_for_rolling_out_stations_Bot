@@ -74,12 +74,15 @@ async def load_file(msg: types.Message):
             await delete_inline_button_in_message_handler(msg)
         else:
             await msg.answer('Пожалуйста, загрузите файл в формате XLSX.')
-            await delete_inline_button_in_message_handler(msg)
 
 
 async def moving_file(callback: types.CallbackQuery):
     """ Заменят старый файл на новый """
+    global locate
     file = os.path.join(locate, 'temp', 'Metro.xlsx')
     destination_folder = os.path.join(locate, 'data', 'Metro.xlsx')
-    await shutil.move(file, destination_folder)
+    try:
+        shutil.move(file, destination_folder)
+    except FileNotFoundError:
+        await callback.answer('Упс, сообщите разработчику, что временный файл протерялся и его обновить не удалось.', show_alert=True)
     await go_home_start_menu(callback)
