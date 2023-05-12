@@ -8,13 +8,15 @@ import shutil
 from aiogram import executor, types
 from aiogram.utils.exceptions import MessageNotModified, MessageToDeleteNotFound
 
+import bot_func
 from bot_func import upload_flag_off, delete_inline_button_in_message_handler, upload_flag_on, go_home_start_menu, \
-    start_massage, reload_reference_file, button_upload_file, upload_flag, locate, load_file, moving_file
+    start_massage, reload_reference_file, button_upload_file, locate, upload_flag
 from config import dp, bot
 from kbr import inline_kbr_start_menu, inline_kbr_upload_new_file, inline_kbr_new_file_apply
 from keyboards import in_kb_help, kb_apply_load1, in_kb_create_conf, kb_apply_load2
 
 logging.basicConfig(level=logging.INFO)
+
 
 
 
@@ -49,7 +51,7 @@ async def start_menu(callback_query: types.CallbackQuery):
 
 @dp.callback_query_handler(lambda query: query.data.startswith('upload_'))
 async def start_menu(callback_query: types.CallbackQuery):
-    """ callback_query_handler Для меню загрузки | В этом меню документ слушает файл"""
+    """ Для меню загрузки | В этом меню документ слушает файл"""
     call = callback_query.data
     if call == 'upload_Download_reference_file':
         """ Кнопка "Скачать образец" """
@@ -59,15 +61,55 @@ async def start_menu(callback_query: types.CallbackQuery):
         await go_home_start_menu(callback_query)
 
 
+@dp.callback_query_handler(lambda query: query.data.startswith('apply_'))
+async def moving_file(callback_query: types.CallbackQuery):
+    """ Меню приминения нового файла """
+    call = callback_query.data
+    if call == 'apply_Moving_file':
+        file = os.path.join(locate, 'temp', 'Metro.xlsx')
+        destination_folder = os.path.join(locate, 'data', 'Metro.xlsx')
+        try:
+            shutil.move(file, destination_folder)
+        except FileNotFoundError:
+            await call.answer('Упс, сообщите разработчику, что временный файл протерялся и его обновить не удалось.',
+                              show_alert=True)
+        await go_home_start_menu(call)
+    elif call == 'apply_Back':
+        await go_home_start_menu(callback_query)
 
 
-### Перенести меню загрузки 2
+
+
+
+
+
+
+
+
+
+
+
 
 
 @dp.message_handler(content_types=types.ContentTypes.DOCUMENT)
 async def listen_file_downloads(msg: types.Message):
-    """ Функция слушает документы """
-    await load_file(msg)
+    """ Функция слушает документы и загружает его"""
+    if bot_func.upload_flag:
+        if msg.document.mime_type == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':  # and message.document.file_name == 'Metro.xlsx': - Проверка по имени
+            file_id = msg.document.file_id
+            file_name = 'Metro.xlsx'  # Переопределяем имя
+            file_path = await bot.get_file(file_id)  # Скачиваем файл
+            downloaded_file = await bot.download_file(file_path.file_path)
+            file = os.path.join(locate, 'temp', file_name)
+            # Сохраняем файл на сервере
+            with open(file, 'wb') as f:
+                f.write(downloaded_file.read())
+            await msg.answer('Файл успешно загружен, выберите действие.', reply_markup=inline_kbr_new_file_apply)
+            await delete_inline_button_in_message_handler(msg)
+        else:
+            await msg.answer('Пожалуйста, загрузите файл в формате XLSX.')
+
+
 
 
 @dp.message_handler()
@@ -75,14 +117,7 @@ async def go_home_message(msg: types.Message):
     """ Эхо функция """
     await upload_flag_off()
     await msg.answer(start_massage, reply_markup=inline_kbr_start_menu)
-    await msg.delete()  # удаляет предыдущее сообщение пользователя
-    chat_id = msg.chat.id
-    message_id = msg.message_id - 1  # Идентификатор предыдущего сообщения
-    reply_markup = types.InlineKeyboardMarkup()  # Создаем пустую клавиатуру
-    await bot.edit_message_reply_markup(chat_id=chat_id, message_id=message_id,
-                                        reply_markup=reply_markup)  # Отправляем отредактированное сообщение с пустой клавиатурой
-
-
+    await delete_inline_button_in_message_handler(msg)
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)

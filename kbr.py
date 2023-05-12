@@ -19,7 +19,7 @@ inline_kbr_upload_new_file.add(InlineKeyboardButton(text="Назад", callback_
 
 
 inline_kbr_new_file_apply = InlineKeyboardMarkup()
-inline_kbr_new_file_apply.add(InlineKeyboardButton(text="Применить файл", callback_data="call_upload_moving_file")) # callback_data="apply"))
-inline_kbr_new_file_apply.add(InlineKeyboardButton(text="Оставить старый файл", callback_data="call_upload_Back"))
+inline_kbr_new_file_apply.add(InlineKeyboardButton(text="Применить файл", callback_data="apply_Moving_file")) # callback_data="apply"))
+inline_kbr_new_file_apply.add(InlineKeyboardButton(text="Оставить старый файл", callback_data="apply_Back"))
 
 
