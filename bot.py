@@ -16,7 +16,7 @@ from kbr import inline_kbr_start_menu, inline_kbr_upload_new_file, inline_kbr_ne
 from keyboards import in_kb_help, kb_apply_load1, in_kb_create_conf, kb_apply_load2
 
 logging.basicConfig(level=logging.INFO)
-
+# Face_Halper_Bot
 
 
 
@@ -82,8 +82,6 @@ async def moving_file(callback_query: types.CallbackQuery):
 
 
 
-
-
 ####################### Служебные #######################
 @dp.message_handler(content_types=types.ContentTypes.DOCUMENT)
 async def listen_file_downloads(msg: types.Message):
@@ -101,7 +99,8 @@ async def listen_file_downloads(msg: types.Message):
             await msg.answer('Файл успешно загружен, выберите действие.', reply_markup=inline_kbr_new_file_apply)
             await delete_inline_button_in_message_handler(msg)
         else:
-            await msg.answer('Пожалуйста, загрузите файл в формате XLSX.')
+            await msg.delete()  # удаляет сообщение
+            await msg.answer('Не верный формат, загрузите файл в формате XLSX.', reply_markup=inline_kbr_upload_new_file)
 
 
 @dp.message_handler()

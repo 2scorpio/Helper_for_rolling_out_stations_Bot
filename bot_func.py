@@ -57,16 +57,3 @@ async def button_upload_file(callback_query):
     await upload_flag_on()
     await callback_query.message.answer('Бот ожидает загрузи файла', reply_markup=inline_kbr_upload_new_file)
     await callback_query.message.edit_reply_markup()  # Удаляет клавиатуру при нажатии
-
-
-# async def replace_file(call: types.CallbackQuery):
-#     """ Заменят старый файл на новый """
-#     file = os.path.join(locate, 'temp', 'Metro.xlsx')
-#     destination_folder = os.path.join(locate, 'data', 'Metro.xlsx')
-#     try:
-#         shutil.move(file, destination_folder)
-#     except FileNotFoundError:
-#         await call.answer('Упс, сообщите разработчику, что временный файл протерялся и его обновить не удалось.', show_alert=True)
-#
-#     await call.answer('Готово!', show_alert=True)
-#     await go_home_start_menu(call)
