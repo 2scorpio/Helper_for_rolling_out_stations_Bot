@@ -68,14 +68,15 @@ async def moving_file(callback_query: types.CallbackQuery):
     if call == 'apply_Moving_file':
         file = os.path.join(locate, 'temp', 'Metro.xlsx')
         destination_folder = os.path.join(locate, 'data', 'Metro.xlsx')
+        await callback_query.answer('Готово!')
         try:
             shutil.move(file, destination_folder)
         except FileNotFoundError:
-            await call.answer('Упс, сообщите разработчику, что временный файл протерялся и его обновить не удалось.',
-                              show_alert=True)
+            await call.answer('Упс, сообщите разработчику, что временный файл протерялся и его обновить не удалось.', show_alert=True)
         await go_home_start_menu(callback_query)
     elif call == 'apply_Back':
         await go_home_start_menu(callback_query)
+
 
 
 
