@@ -8,7 +8,7 @@ import shutil
 from aiogram import executor, types
 from aiogram.utils.exceptions import MessageNotModified, MessageToDeleteNotFound
 
-from bot_func import upload_flag_off, delete_inline_button_in_message_handler, upload_flag_on
+from bot_func import upload_flag_off, delete_inline_button_in_message_handler, upload_flag_on, go_home_start_menu
 from config import dp, bot
 from kbr import inline_kbr_start_menu, inline_kbr_upload_new_file
 from keyboards import in_kb_help, kb_apply_load1, in_kb_create_conf, kb_apply_load2
@@ -32,13 +32,15 @@ async def start_menu(callback_query: types.CallbackQuery):
     if call == 'call_1':
         """ 1. - Добавить новый сервер """
         await call.answer('Вы выбрали Callback 1')
-
-    elif call.startswith('call_upload_'):
+    elif call.startswith('call_upload'):
         """ Меню обновления файла, вызывается с кнопки "Обновить файл" """
-        if call == "call_upload_new_file":
+        if len(call) == 'call_upload':
             await upload_flag_on()
             await callback_query.message.answer('Бот ожидает загрузи файла', reply_markup=inline_kbr_upload_new_file)
             await callback_query.message.edit_reply_markup()  # Удаляет клавиатуру при нажатии
+        else:
+            if call == 'call_upload_Back':
+                await go_home_start_menu(call):
 
 
 
