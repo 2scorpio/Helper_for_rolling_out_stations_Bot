@@ -7,12 +7,14 @@ import shutil
 
 from aiogram import executor, types
 from config import dp, bot
+from kbr import inline_kbr_upload_new_file, inline_kbr_start_menu, inline_kbr_new_file_apply
 from keyboards import in_kb_help, kb_apply_load1, in_kb_create_conf, kb_apply_load2
+
 
 
 upload_flag = False # Флаг загрузки
 locate = os.path.dirname(__file__)
-
+start_massage = 'Как будет действовать хацкер?\nПоследний файл был загружен КЕМ и КОГДА'
 
 async def delete_inline_button_in_message_handler(msg):
     await msg.delete()  # удаляет сообщение
@@ -38,6 +40,46 @@ async def upload_flag_on():
 async def go_home_start_menu(callback: types.CallbackQuery):
     """ Кнопка назад стартового меню """
     await upload_flag_off()
-    await callback.message.answer("Как будет дейтсвовать хацкер?", reply_markup=in_kb_help)
-    await bot.answer_callback_query(callback_query_id=callback.id)  # Фиксим часы, отправляем боту ответ, что сообщение дошло
+    await callback.message.answer(start_massage, reply_markup=inline_kbr_start_menu)
     await callback.message.edit_reply_markup() # Удаляет клавиатуру при нажатии
+
+
+async def reload_reference_file(callback: types.CallbackQuery):
+    """ Скачивание файла референса"""
+    file_ref_locate = os.path.join(locate, 'reference_files', 'Metro.xlsx')
+    with open(file_ref_locate, 'rb') as file:
+        await bot.send_document(callback.from_user.id, file)
+    await bot.answer_callback_query(callback_query_id=callback.id) # Фиксим часы, отправляем боту ответ, что сообщение дошло
+
+
+async def button_upload_file(callback_query):
+    await upload_flag_on()
+    await callback_query.message.answer('Бот ожидает загрузи файла', reply_markup=inline_kbr_upload_new_file)
+    await callback_query.message.edit_reply_markup()  # Удаляет клавиатуру при нажатии
+
+
+async def load_file(msg: types.Message):
+    """ Функция загруки файла """
+    if upload_flag:
+        if msg.document.mime_type == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': #and message.document.file_name == 'Metro.xlsx': - Проверка по имени
+            file_id = msg.document.file_id
+            file_name = 'Metro.xlsx' # Переопределяем имя
+            file_path = await bot.get_file(file_id)  # Скачиваем файл
+            downloaded_file = await bot.download_file(file_path.file_path)
+            file = os.path.join(locate, 'temp', file_name)
+            # Сохраняем файл на сервере
+            with open(file, 'wb') as f:
+                f.write(downloaded_file.read())
+            await msg.answer('Файл успешно загружен, выберите действие.', reply_markup=inline_kbr_new_file_apply)
+            await delete_inline_button_in_message_handler(msg)
+        else:
+            await msg.answer('Пожалуйста, загрузите файл в формате XLSX.')
+            await delete_inline_button_in_message_handler(msg)
+
+
+async def moving_file(callback: types.CallbackQuery):
+    """ Заменят старый файл на новый """
+    file = os.path.join(locate, 'temp', 'Metro.xlsx')
+    destination_folder = os.path.join(locate, 'data', 'Metro.xlsx')
+    await shutil.move(file, destination_folder)
+    await go_home_start_menu(callback)

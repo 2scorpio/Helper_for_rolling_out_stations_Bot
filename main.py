@@ -32,7 +32,7 @@ start_massage = 'Привет <b> !Добавить имя! </b>, я могу:\n
 
 file_filler = 'лупа пупа' # Тот, кто последний залил файл
 last_date_load = '2023-05-06-20:22'
-upload_flag = False # Флаг загрузки
+#upload_flag = False # Флаг загрузки
 locate = os.path.dirname(__file__)
 
 
@@ -114,6 +114,7 @@ async def reload_file_1(callback: types.CallbackQuery):
 @dp.callback_query_handler(text="CREATE_CONF")
 async def create_config(callback: types.CallbackQuery):
     """ Создать коонфиги """
+    await upload_flag_off()
     await upload_flag_off()
     await callback.message.answer("Выберите предложенное дейсвите:",
                                   reply_markup=in_kb_create_conf

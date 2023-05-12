@@ -1,5 +1,6 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
+
 inline_kbr_start_menu = InlineKeyboardMarkup()
 """ Клавиатура для стартового меню """
 inline_kbr_start_menu.add(InlineKeyboardButton(text='1. - Добавить новый сервер'.upper(), callback_data="call_com_1")) # callback_data="new_server"))
@@ -13,13 +14,12 @@ inline_kbr_start_menu.add(InlineKeyboardButton(text='Справка'.upper(), ca
 
 
 inline_kbr_upload_new_file = InlineKeyboardMarkup()
-inline_kbr_upload_new_file.add(InlineKeyboardButton(text="Назад", callback_data="call_upload_Back"))
 inline_kbr_upload_new_file.add(InlineKeyboardButton(text="Скачать образец", callback_data="call_upload_Download_reference_file"))
+inline_kbr_upload_new_file.add(InlineKeyboardButton(text="Назад", callback_data="call_upload_Back"))
 
 
-# kb_apply_load2 = InlineKeyboardMarkup()
-# """ Клавиатура2 для меню зарузки файла """
-# kb_apply_load2.add(InlineKeyboardButton(text="Применить файл", callback_data="moving_file")) # callback_data="apply"))
-# kb_apply_load2.add(InlineKeyboardButton(text="Оставить старый файл", callback_data="back"))
-# #inline_kbr_start_menu.add(InlineKeyboardButton(text='Назад', callback_data="call_back"))
+inline_kbr_new_file_apply = InlineKeyboardMarkup()
+inline_kbr_new_file_apply.add(InlineKeyboardButton(text="Применить файл", callback_data="call_upload_moving_file")) # callback_data="apply"))
+inline_kbr_new_file_apply.add(InlineKeyboardButton(text="Оставить старый файл", callback_data="call_upload_Back"))
+
 
