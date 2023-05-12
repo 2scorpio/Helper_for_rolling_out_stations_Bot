@@ -27,10 +27,10 @@ async def first_blood(msg: types.Message):
     await msg.answer(start_massage, reply_markup=inline_kbr_start_menu)
     await msg.delete() # удаляет предыдущее сообщение пользователя
 
-
+####################### Меню #######################
 @dp.callback_query_handler(lambda query: query.data.startswith('start_'))
 async def start_menu(callback_query: types.CallbackQuery):
-    """ callback_query_handler Для стартового меню """
+    """ Меню старт """
     call = callback_query.data
     if call == 'start_1':
         """ 1. - Добавить новый сервер """
@@ -51,7 +51,7 @@ async def start_menu(callback_query: types.CallbackQuery):
 
 @dp.callback_query_handler(lambda query: query.data.startswith('upload_'))
 async def start_menu(callback_query: types.CallbackQuery):
-    """ Для меню загрузки | В этом меню документ слушает файл"""
+    """ Меню загрузки | В этом меню документ слушает файл"""
     call = callback_query.data
     if call == 'upload_Download_reference_file':
         """ Кнопка "Скачать образец" """
@@ -73,7 +73,7 @@ async def moving_file(callback_query: types.CallbackQuery):
         except FileNotFoundError:
             await call.answer('Упс, сообщите разработчику, что временный файл протерялся и его обновить не удалось.',
                               show_alert=True)
-        await go_home_start_menu(call)
+        await go_home_start_menu(callback_query)
     elif call == 'apply_Back':
         await go_home_start_menu(callback_query)
 
@@ -83,17 +83,10 @@ async def moving_file(callback_query: types.CallbackQuery):
 
 
 
-
-
-
-
-
-
-
-
+####################### Служебные #######################
 @dp.message_handler(content_types=types.ContentTypes.DOCUMENT)
 async def listen_file_downloads(msg: types.Message):
-    """ Функция слушает документы и загружает его"""
+    """ Функция слушает документ и загружает его"""
     if bot_func.upload_flag:
         if msg.document.mime_type == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':  # and message.document.file_name == 'Metro.xlsx': - Проверка по имени
             file_id = msg.document.file_id
@@ -108,8 +101,6 @@ async def listen_file_downloads(msg: types.Message):
             await delete_inline_button_in_message_handler(msg)
         else:
             await msg.answer('Пожалуйста, загрузите файл в формате XLSX.')
-
-
 
 
 @dp.message_handler()
