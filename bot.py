@@ -26,46 +26,42 @@ async def first_blood(msg: types.Message):
     await msg.delete() # удаляет предыдущее сообщение пользователя
 
 
-@dp.callback_query_handler(lambda query: query.data.startswith('call_'))
+@dp.callback_query_handler(lambda query: query.data.startswith('start_'))
 async def start_menu(callback_query: types.CallbackQuery):
-    """ callback_query_handler Для меню стартового меню """
+    """ callback_query_handler Для стартового меню """
     call = callback_query.data
-    if call == 'call_1':
+    if call == 'start_1':
         """ 1. - Добавить новый сервер """
         await call.answer('Вы выбрали Callback 1')
-    elif call == 'call_2':
+    elif call == 'start_2':
         """ 2. - Добавить новый сервер """
         await call.answer('Вы выбрали Callback 1')
-    elif call.startswith('call_upload'):
-        """ Меню обновления файла, вызывается с кнопки "Обновить файл", сама кнопка в блоке Else """
-        if call.startswith('call_upload_'):
-            if call == 'call_upload_Back':
-                """ Кнопка назад """
-                await go_home_start_menu(callback_query)
-            elif call == 'call_upload_Download_reference_file':
-                """ Кнопка "Скачать образец" """
-                await reload_reference_file(callback_query)
-            elif call.startswith('call_upload_moving_'):
-                if call == 'call_upload_moving_file':
-                    """ Кпопка "Применить файл """
-                    await moving_file(callback_query)
-
-        else:
-            """ Кнопка "Обновить файл" """
-            await button_upload_file(callback_query)
+        ######################################
+        ######################################
+    elif call.startswith('start_Upload'):
+        """ Меню обновления файла, вызывается с кнопки "Обновить файл" """
+        await button_upload_file(callback_query)
+        ######################################
     else:
         """ Заглушка """
         await callback_query.answer('Сорри, разработчика, скорее всего, заставляют работать другую бесполезную работу, выберите пока что ни будь другое. Спасибо за понимание.', show_alert=True)
 
 
+@dp.callback_query_handler(lambda query: query.data.startswith('upload_'))
+async def start_menu(callback_query: types.CallbackQuery):
+    """ callback_query_handler Для меню загрузки | В этом меню документ слушает файл"""
+    call = callback_query.data
+    if call == 'upload_Download_reference_file':
+        """ Кнопка "Скачать образец" """
+        await reload_reference_file(callback_query)
+    elif call == 'upload_Back':
+        """ Кнопка назад """
+        await go_home_start_menu(callback_query)
 
 
 
 
-
-
-
-
+### Перенести меню загрузки 2
 
 
 @dp.message_handler(content_types=types.ContentTypes.DOCUMENT)
