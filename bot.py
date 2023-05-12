@@ -85,6 +85,7 @@ async def moving_file(callback_query: types.CallbackQuery):
 ####################### Служебные #######################
 @dp.message_handler(content_types=types.ContentTypes.DOCUMENT)
 async def listen_file_downloads(msg: types.Message):
+    await delete_inline_button_in_message_handler(msg)
     """ Функция слушает документ и загружает его"""
     if bot_func.upload_flag:
         if msg.document.mime_type == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':  # and message.document.file_name == 'Metro.xlsx': - Проверка по имени
@@ -97,9 +98,9 @@ async def listen_file_downloads(msg: types.Message):
             with open(file, 'wb') as f:
                 f.write(downloaded_file.read())
             await msg.answer('Файл успешно загружен, выберите действие.', reply_markup=inline_kbr_new_file_apply)
-            await delete_inline_button_in_message_handler(msg)
+            await msg.delete()  # удаляет сообщение от пользователя
         else:
-            await msg.delete()  # удаляет сообщение
+            await msg.delete()  # удаляет сообщение от пользователя
             await msg.answer('Не верный формат, загрузите файл в формате XLSX.', reply_markup=inline_kbr_upload_new_file)
 
 
@@ -109,6 +110,7 @@ async def go_home_message(msg: types.Message):
     await upload_flag_off()
     await msg.answer(start_massage, reply_markup=inline_kbr_start_menu)
     await delete_inline_button_in_message_handler(msg)
+    await msg.delete()  # удаляет сообщение от пользователя
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)

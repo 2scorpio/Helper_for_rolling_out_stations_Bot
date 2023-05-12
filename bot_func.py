@@ -15,7 +15,6 @@ upload_flag = False  # Флаг загрузки
 
 
 async def delete_inline_button_in_message_handler(msg):
-    await msg.delete()  # удаляет сообщение
     """ Удаление инлай клавиатуры с предыдущего сообщения для message_handler """
     chat_id = msg.chat.id
     message_id = msg.message_id - 1  # Идентификатор предыдущего сообщения
@@ -55,5 +54,5 @@ async def reload_reference_file(callback: types.CallbackQuery):
 
 async def button_upload_file(callback_query):
     await upload_flag_on()
-    await callback_query.message.answer('Бот ожидает загрузи файла', reply_markup=inline_kbr_upload_new_file)
+    await callback_query.message.answer('Бот ожидает загрузки файла', reply_markup=inline_kbr_upload_new_file)
     await callback_query.message.edit_reply_markup()  # Удаляет клавиатуру при нажатии
