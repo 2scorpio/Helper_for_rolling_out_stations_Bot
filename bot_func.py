@@ -14,7 +14,7 @@ start_massage = 'Как будет действовать хацкер?\nПос�
 upload_flag = False  # Флаг загрузки
 
 
-async def delete_inline_button_in_message_handler(msg):
+async def delete_inline_button_in_message_handler(msg): # Удаляет только из под message_handler
     """ Удаление инлай клавиатуры с предыдущего сообщения для message_handler """
     chat_id = msg.chat.id
     message_id = msg.message_id - 1  # Идентификатор предыдущего сообщения
@@ -35,21 +35,22 @@ async def upload_flag_on():
     upload_flag = True
 
 
-async def go_home_start_menu(callback: types.CallbackQuery):
+async def go_home_start_menu(call: types.CallbackQuery):
     """ Кнопка назад стартового меню """
     await upload_flag_off()
-    await callback.message.edit_reply_markup()  # Удаляет клавиатуру при нажатии
-    await callback.message.answer(start_massage, reply_markup=inline_kbr_start_menu)
+    await call.message.edit_reply_markup()  # Удаляет клавиатуру при нажатии
+    await call.message.answer(start_massage, reply_markup=inline_kbr_start_menu)
 
 
 
-async def reload_reference_file(callback: types.CallbackQuery):
+async def reload_reference_file_1(call: types.CallbackQuery):
     """ Скачивание файла референса"""
+    #await call.message.edit_reply_markup()  # Удаляет клавиатуру при нажатии
+    await call.message.delete()  # Удаляет сообщение полностью
     file_ref_locate = os.path.join(locate, 'reference_files', 'Metro.xlsx')
     with open(file_ref_locate, 'rb') as file:
-        await bot.send_document(callback.from_user.id, file)
-    await bot.answer_callback_query(
-        callback_query_id=callback.id)  # Фиксим часы, отправляем боту ответ, что сообщение дошло
+        await bot.send_document(call.from_user.id, file)
+    await bot.answer_callback_query(callback_query_id=call.id)  # Фиксим часы, отправляем боту ответ, что сообщение дошло
 
 
 async def button_upload_file(callback_query):

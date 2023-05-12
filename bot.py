@@ -10,7 +10,7 @@ from aiogram.utils.exceptions import MessageNotModified, MessageToDeleteNotFound
 
 import bot_func
 from bot_func import upload_flag_off, delete_inline_button_in_message_handler, upload_flag_on, go_home_start_menu, \
-    start_massage, reload_reference_file, button_upload_file, locate, upload_flag
+    start_massage, button_upload_file, locate, upload_flag
 from config import dp, bot
 from kbr import inline_kbr_start_menu, inline_kbr_upload_new_file, inline_kbr_new_file_apply
 from keyboards import in_kb_help, kb_apply_load1, in_kb_create_conf, kb_apply_load2
@@ -55,10 +55,27 @@ async def start_menu(callback_query: types.CallbackQuery):
     call = callback_query.data
     if call == 'upload_Download_reference_file':
         """ Кнопка "Скачать образец" """
-        await reload_reference_file(callback_query)
+
+
+
+
+
+        await callback_query.message.delete()  # Удаляет сообщение полностью
+        # Придумать рекурсию !!!!!!!!!!!!!!!! Дублирует reload_reference_file_1
+        await start_menu(callback_query)
+
+
+        file_ref_locate = os.path.join(locate, 'reference_files', 'Metro.xlsx')
+        with open(file_ref_locate, 'rb') as file:
+            await bot.send_document(callback_query.from_user.id, file)
+        await start_menu(callback_query)
+
+
+
     elif call == 'upload_Back':
         """ Кнопка назад """
         await go_home_start_menu(callback_query)
+
 
 
 @dp.callback_query_handler(lambda query: query.data.startswith('apply_'))
