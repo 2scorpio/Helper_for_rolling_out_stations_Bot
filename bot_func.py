@@ -19,13 +19,13 @@ chat_id = 0
 message_id = 0
 
 
-# async def delete_inline_button_in_message_handler(msg): # Удаляет только из под message_handler
-#     """ Удаление инлай клавиатуры с предыдущего сообщения для message_handler """
-#     chat_id = msg.chat.id
-#     message_id = msg.message_id - 1  # Идентификатор предыдущего сообщения
-#     reply_markup = types.InlineKeyboardMarkup()  # Создаем пустую клавиатуру
-#     await bot.edit_message_reply_markup(chat_id=chat_id, message_id=message_id,
-#                                         reply_markup=reply_markup)  # Отправляем отредактированное сообщение с пустой клавиатурой
+async def delete_inline_button_in_message_handler(msg): # Удаляет только из под message_handler
+    """ Удаление инлай клавиатуры с предыдущего сообщения для message_handler """
+    chat_id = msg.chat.id
+    message_id = msg.message_id - 1  # Идентификатор предыдущего сообщения
+    reply_markup = types.InlineKeyboardMarkup()  # Создаем пустую клавиатуру
+    await bot.edit_message_reply_markup(chat_id=chat_id, message_id=message_id,
+                                        reply_markup=reply_markup)  # Отправляем отредактированное сообщение с пустой клавиатурой
 
 
 async def upload_flag_off():
@@ -72,7 +72,7 @@ async def get_id_last_massage_with_inline_kbrd(msg):
     with open('HDD', 'r', encoding='UTF-8') as file: # Получаем id предыдущего сообщения
         last_massage_with_inline_kbrd = file.read().split(' ')
 
-    with open('HDD', 'w', encoding='UTF-8') as file: # Получаем id сообщения и записываем его
+    with open('HDD', 'w', encoding='UTF-8') as file: # Получаем id текущего сообщения и записываем его
         file.write(f'{msg.chat.id} {msg.message_id + 1}')
 
     try: # Проверяем, не 1й ли запуск, обрабатываем ошибку
