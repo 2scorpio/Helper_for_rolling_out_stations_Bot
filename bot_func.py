@@ -12,6 +12,7 @@ from keyboards import in_kb_help, kb_apply_load1, in_kb_create_conf, kb_apply_lo
 locate = os.path.dirname(__file__)
 start_massage = 'Как будет действовать хацкер?\nПоследний файл был загружен КЕМ и КОГДА'
 upload_flag = False  # Флаг загрузки
+f = True
 
 
 async def delete_inline_button_in_message_handler(msg): # Удаляет только из под message_handler
@@ -50,6 +51,7 @@ async def reload_reference_file_1(call: types.CallbackQuery):
     file_ref_locate = os.path.join(locate, 'reference_files', 'Metro.xlsx')
     with open(file_ref_locate, 'rb') as file:
         await bot.send_document(call.from_user.id, file)
+
     await bot.answer_callback_query(callback_query_id=call.id)  # Фиксим часы, отправляем боту ответ, что сообщение дошло
 
 

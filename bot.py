@@ -58,17 +58,19 @@ async def start_menu(callback_query: types.CallbackQuery):
 
 
 
+        # await callback_query.message.delete()  # Удаляет сообщение полностью
+        # await start_menu(callback_query)
 
 
-        await callback_query.message.delete()  # Удаляет сообщение полностью
-        # Придумать рекурсию !!!!!!!!!!!!!!!! Дублирует reload_reference_file_1
-        await start_menu(callback_query)
-
-
-        file_ref_locate = os.path.join(locate, 'reference_files', 'Metro.xlsx')
+        file_ref_locate = os.path.join(locate, 'reference_files', 'Metro.xlsx') # Локация файла
         with open(file_ref_locate, 'rb') as file:
             await bot.send_document(callback_query.from_user.id, file)
-        await start_menu(callback_query)
+        await bot.answer_callback_query(callback_query_id=callback_query.id) #  Фиксим часы, отправляем боту ответ, что сообщение дошло
+
+        await button_upload_file(callback_query)
+
+
+
 
 
 
@@ -102,6 +104,7 @@ async def moving_file(callback_query: types.CallbackQuery):
 ####################### Служебные #######################
 @dp.message_handler(content_types=types.ContentTypes.DOCUMENT)
 async def listen_file_downloads(msg: types.Message):
+
     await delete_inline_button_in_message_handler(msg)
     """ Функция слушает документ и загружает его"""
     if bot_func.upload_flag:
@@ -119,6 +122,8 @@ async def listen_file_downloads(msg: types.Message):
         else:
             await msg.delete()  # удаляет сообщение от пользователя
             await msg.answer('Не верный формат, загрузите файл в формате XLSX.', reply_markup=inline_kbr_upload_new_file)
+    else:
+        await msg.delete()  # удаляет сообщение от пользователя
 
 
 @dp.message_handler()
