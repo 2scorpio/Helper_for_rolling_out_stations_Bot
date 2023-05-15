@@ -45,10 +45,6 @@ async def start_menu(callback_query: types.CallbackQuery):
         ######################################
     elif call.startswith('start_Upload'):
         """ Меню обновления файла, вызывается с кнопки "Обновить файл" """
-
-        with open('HDD', 'w', encoding='UTF-8') as file:  # Получаем id текущего сообщения и записываем его
-            file.write(f'{callback_query.message.chat.id} {callback_query.message.message_id + 1}')
-
         await button_upload_file(callback_query)
         ######################################
     else:
