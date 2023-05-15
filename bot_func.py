@@ -5,6 +5,8 @@ import os
 import shutil
 
 from aiogram import executor, types
+from aiogram.utils.exceptions import ChatNotFound
+
 from config import dp, bot
 from kbr import inline_kbr_upload_new_file, inline_kbr_start_menu, inline_kbr_new_file_apply
 
@@ -62,11 +64,21 @@ async def button_upload_file(callback_query):
     await callback_query.message.edit_reply_markup()  # Удаляет клавиатуру при нажатии
 
 
-def get_id_last_massage_with_inline_kbrd(msg):
+async def get_id_last_massage_with_inline_kbrd(msg):
     """ Функция получает id предыдущего сообщения с инлайн кнопкой и записывает текущее сообщение """
+    """ Затем удаляет инлайн кнопку с сообщения """
     """ Функцию нужно вставлять перед сообщением бота """
+
     with open('HDD', 'r', encoding='UTF-8') as file: # Получаем id предыдущего сообщения
         last_massage_with_inline_kbrd = file.read().split(' ')
+
     with open('HDD', 'w', encoding='UTF-8') as file: # Получаем id сообщения и записываем его
         file.write(f'{msg.chat.id} {msg.message_id + 1}')
-    return last_massage_with_inline_kbrd
+
+    try: # Проверяем, не 1й ли запуск, обрабатываем ошибку
+        await bot.edit_message_reply_markup(chat_id=int(last_massage_with_inline_kbrd[0]), message_id=int(last_massage_with_inline_kbrd[1]), reply_markup=types.InlineKeyboardMarkup())  # Отправляем отредактированное сообщение с пустой клавиатурой
+    except ChatNotFound:
+        pass
+
+
+

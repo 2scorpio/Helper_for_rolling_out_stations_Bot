@@ -120,11 +120,7 @@ async def listen_file_downloads(msg: types.Message):
 async def go_home_message(msg: types.Message):
     """ Эхо функция """
     await upload_flag_off()
-    last_massage_with_inline_kbrd = get_id_last_massage_with_inline_kbrd(msg) # нужно вставлять перед сообщением бота c нлайн кнопками
-    try: # Проверяем, не 1й ли запуск, обрабатываем ошибку
-        await bot.edit_message_reply_markup(chat_id=int(last_massage_with_inline_kbrd[0]), message_id=int(last_massage_with_inline_kbrd[1]), reply_markup=types.InlineKeyboardMarkup())  # Отправляем отредактированное сообщение с пустой клавиатурой
-    except ChatNotFound:
-        pass
+    await get_id_last_massage_with_inline_kbrd(msg) # нужно вставлять перед сообщением бота c нлайн кнопками
     await msg.answer(start_massage, reply_markup=inline_kbr_start_menu) # Вызов стартового меню
     await msg.delete()  # удаляет сообщение от пользователя
 
