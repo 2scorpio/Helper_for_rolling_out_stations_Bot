@@ -56,24 +56,14 @@ async def start_menu(callback_query: types.CallbackQuery):
     if call == 'upload_Download_reference_file':
         """ Кнопка "Скачать образец" """
 
-
-
         # await callback_query.message.delete()  # Удаляет сообщение полностью
         # await start_menu(callback_query)
-
 
         file_ref_locate = os.path.join(locate, 'reference_files', 'Metro.xlsx') # Локация файла
         with open(file_ref_locate, 'rb') as file:
             await bot.send_document(callback_query.from_user.id, file)
         await bot.answer_callback_query(callback_query_id=callback_query.id) #  Фиксим часы, отправляем боту ответ, что сообщение дошло
-
         await button_upload_file(callback_query)
-
-
-
-
-
-
     elif call == 'upload_Back':
         """ Кнопка назад """
         await go_home_start_menu(callback_query)
