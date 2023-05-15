@@ -10,8 +10,7 @@ from aiogram.utils.exceptions import MessageNotModified, MessageToDeleteNotFound
     MessageToEditNotFound
 
 import bot_func
-from bot_func import upload_flag_off, get_id_last_massage_with_inline_kbrd, go_home_start_menu, \
-    start_massage, button_upload_file, locate, upload_flag, last_massage_with_inline_kbrd, delete_inline_button_in_message_handler
+from bot_func import upload_flag_off, go_home_start_menu, start_massage, button_upload_file, locate, delete_inline_button_in_message_handler
 from config import dp, bot
 from kbr import inline_kbr_start_menu, inline_kbr_upload_new_file, inline_kbr_new_file_apply
 
@@ -63,10 +62,6 @@ async def start_menu(callback_query: types.CallbackQuery):
     call = callback_query.data
     if call == 'upload_Download_reference_file':
         """ Кнопка "Скачать образец" """
-
-        # await callback_query.message.delete()  # Удаляет сообщение полностью
-        # await start_menu(callback_query)
-
         file_ref_locate = os.path.join(locate, 'reference_files', 'Metro.xlsx') # Локация файла
         with open(file_ref_locate, 'rb') as file:
             await bot.send_document(callback_query.from_user.id, file)
@@ -128,29 +123,6 @@ async def go_home_message(msg: types.Message):
     """ Эхо функция """
     await upload_flag_off()
     await delete_inline_button_in_message_handler(msg)
-
-
-
-
-
-    # """ ************** """
-    # #await get_id_last_massage_with_inline_kbrd(msg) # нужно вставлять перед сообщением бота c нлайн кнопками
-    # with open('HDD', 'r', encoding='UTF-8') as file: # Получаем id предыдущего сообщения
-    #     last_massage_with_inline_kbrd = file.read().split(' ')
-    #
-    # with open('HDD', 'w', encoding='UTF-8') as file: # Получаем id текущего сообщения и записываем его
-    #     file.write(f'{msg.chat.id} {msg.message_id + 1}')
-    #
-    # try: # Проверяем, не 1й ли запуск, обрабатываем ошибку
-    #     await bot.edit_message_reply_markup(chat_id=int(last_massage_with_inline_kbrd[0]), message_id=int(last_massage_with_inline_kbrd[1]), reply_markup=types.InlineKeyboardMarkup())  # Отправляем отредактированное сообщение с пустой клавиатурой
-    # except ChatNotFound:
-    #     # with open('HDD', 'w', encoding='UTF-8') as file:
-    #     #     file.write(f'0 0')
-    #     pass
-    # """ ************** """
-
-
-
     await msg.answer(start_massage, reply_markup=inline_kbr_start_menu) # Вызов стартового меню
     await msg.delete()  # удаляет сообщение от пользователя
 

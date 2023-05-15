@@ -69,21 +69,4 @@ async def button_upload_file(callback_query):
     await callback_query.message.edit_reply_markup()  # Удаляет клавиатуру при нажатии
 
 
-async def get_id_last_massage_with_inline_kbrd(msg):
-    """ Функция получает id предыдущего сообщения с инлайн кнопкой и записывает текущее сообщение """
-    """ Затем удаляет инлайн кнопку с сообщения """
-    """ Функцию нужно вставлять перед сообщением бота """
-
-    with open('HDD', 'r', encoding='UTF-8') as file: # Получаем id предыдущего сообщения
-        last_massage_with_inline_kbrd = file.read().split(' ')
-
-    with open('HDD', 'w', encoding='UTF-8') as file: # Получаем id текущего сообщения и записываем его
-        file.write(f'{msg.chat.id} {msg.message_id + 1}')
-
-    try: # Проверяем, не 1й ли запуск, обрабатываем ошибку
-        await bot.edit_message_reply_markup(chat_id=int(last_massage_with_inline_kbrd[0]), message_id=int(last_massage_with_inline_kbrd[1]), reply_markup=types.InlineKeyboardMarkup())  # Отправляем отредактированное сообщение с пустой клавиатурой
-    except ChatNotFound:
-        pass
-
-
 
