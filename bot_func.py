@@ -60,3 +60,13 @@ async def button_upload_file(callback_query):
     await upload_flag_on()
     await callback_query.message.answer('Бот ожидает загрузки файла', reply_markup=inline_kbr_upload_new_file)
     await callback_query.message.edit_reply_markup()  # Удаляет клавиатуру при нажатии
+
+
+def get_id_last_massage_with_inline_kbrd(msg):
+    """ Функция получает id предыдущего сообщения с инлайн кнопкой и записывает текущее сообщение """
+    """ Функцию нужно вставлять перед сообщением бота """
+    with open('HDD', 'r', encoding='UTF-8') as file: # Получаем id предыдущего сообщения
+        last_massage_with_inline_kbrd = file.read().split(' ')
+    with open('HDD', 'w', encoding='UTF-8') as file: # Получаем id сообщения и записываем его
+        file.write(f'{msg.chat.id} {msg.message_id + 1}')
+    return last_massage_with_inline_kbrd

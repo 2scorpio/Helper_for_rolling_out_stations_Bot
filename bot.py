@@ -9,7 +9,7 @@ from aiogram import executor, types
 from aiogram.utils.exceptions import MessageNotModified, MessageToDeleteNotFound, ChatNotFound
 
 import bot_func
-from bot_func import upload_flag_off, upload_flag_on, go_home_start_menu, \
+from bot_func import upload_flag_off, get_id_last_massage_with_inline_kbrd, go_home_start_menu, \
     start_massage, button_upload_file, locate, upload_flag, last_massage_with_inline_kbrd
 from config import dp, bot
 from kbr import inline_kbr_start_menu, inline_kbr_upload_new_file, inline_kbr_new_file_apply
@@ -120,29 +120,15 @@ async def listen_file_downloads(msg: types.Message):
 async def go_home_message(msg: types.Message):
     """ Эхо функция """
     await upload_flag_off()
-
-
-
-    with open('HDD', 'r', encoding='UTF-8') as file:
-        last_massage_with_inline_kbrd = file.read().split(' ')
-
-
-    print(last_massage_with_inline_kbrd)
-
+    last_massage_with_inline_kbrd = get_id_last_massage_with_inline_kbrd(msg) # нужно вставлять перед сообщением бота c нлайн кнопками
     try: # Проверяем, не 1й ли запуск, обрабатываем ошибку
         await bot.edit_message_reply_markup(chat_id=int(last_massage_with_inline_kbrd[0]), message_id=int(last_massage_with_inline_kbrd[1]), reply_markup=types.InlineKeyboardMarkup())  # Отправляем отредактированное сообщение с пустой клавиатурой
     except ChatNotFound:
         pass
-    await msg.answer(start_massage, reply_markup=inline_kbr_start_menu)
-    last_massage_with_inline_kbrd = str(msg.chat.id) + ' ' + str(msg.message_id + 1)
-    print(last_massage_with_inline_kbrd)
-
-
-    with open('HDD', 'w', encoding='UTF-8') as file:
-        file.write(last_massage_with_inline_kbrd)
-
-
+    await msg.answer(start_massage, reply_markup=inline_kbr_start_menu) # Вызов стартового меню
     await msg.delete()  # удаляет сообщение от пользователя
+
+
 
 
 
