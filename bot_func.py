@@ -7,7 +7,7 @@ import shutil
 from aiogram import executor, types
 from config import dp, bot
 from kbr import inline_kbr_upload_new_file, inline_kbr_start_menu, inline_kbr_new_file_apply
-from keyboards import in_kb_help, kb_apply_load1, in_kb_create_conf, kb_apply_load2
+
 
 locate = os.path.dirname(__file__)
 start_massage = 'Как будет действовать хацкер?\nПоследний файл был загружен КЕМ и КОГДА'

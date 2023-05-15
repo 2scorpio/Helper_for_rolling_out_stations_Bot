@@ -6,14 +6,14 @@ import shutil
 
 
 from aiogram import executor, types
-from aiogram.utils.exceptions import MessageNotModified, MessageToDeleteNotFound
+from aiogram.utils.exceptions import MessageNotModified, MessageToDeleteNotFound, ChatNotFound
 
 import bot_func
 from bot_func import upload_flag_off, upload_flag_on, go_home_start_menu, \
     start_massage, button_upload_file, locate, upload_flag, last_massage_with_inline_kbrd
 from config import dp, bot
 from kbr import inline_kbr_start_menu, inline_kbr_upload_new_file, inline_kbr_new_file_apply
-from keyboards import in_kb_help, kb_apply_load1, in_kb_create_conf, kb_apply_load2
+
 
 
 logging.basicConfig(level=logging.INFO)
@@ -123,19 +123,30 @@ async def go_home_message(msg: types.Message):
 
 
 
-    print(bot_func.last_massage_with_inline_kbrd)
+    with open('HDD', 'r', encoding='UTF-8') as file:
+        last_massage_with_inline_kbrd = file.read().split(' ')
 
-    try:
-    #if bot_func.last_massage_with_inline_kbrd != 0: # Проверяем, не 1й ли запуск
-        await bot.edit_message_reply_markup(chat_id=bot_func.last_massage_with_inline_kbrd[0], message_id=bot_func.last_massage_with_inline_kbrd[1], reply_markup=types.InlineKeyboardMarkup())  # Отправляем отредактированное сообщение с пустой клавиатурой
-    except TypeError:
+
+    print(last_massage_with_inline_kbrd)
+
+    try: # Проверяем, не 1й ли запуск, обрабатываем ошибку
+        await bot.edit_message_reply_markup(chat_id=int(last_massage_with_inline_kbrd[0]), message_id=int(last_massage_with_inline_kbrd[1]), reply_markup=types.InlineKeyboardMarkup())  # Отправляем отредактированное сообщение с пустой клавиатурой
+    except ChatNotFound:
         pass
     await msg.answer(start_massage, reply_markup=inline_kbr_start_menu)
-    bot_func.last_massage_with_inline_kbrd = (msg.chat.id, msg.message_id + 1)
+    last_massage_with_inline_kbrd = str(msg.chat.id) + ' ' + str(msg.message_id + 1)
+    print(last_massage_with_inline_kbrd)
 
 
-    # await delete_inline_button_in_message_handler(msg)
+    with open('HDD', 'w', encoding='UTF-8') as file:
+        file.write(last_massage_with_inline_kbrd)
+
+
     await msg.delete()  # удаляет сообщение от пользователя
+
+
+
+
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)
