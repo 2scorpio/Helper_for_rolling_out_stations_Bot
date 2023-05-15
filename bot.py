@@ -9,11 +9,12 @@ from aiogram import executor, types
 from aiogram.utils.exceptions import MessageNotModified, MessageToDeleteNotFound
 
 import bot_func
-from bot_func import upload_flag_off, delete_inline_button_in_message_handler, upload_flag_on, go_home_start_menu, \
-    start_massage, button_upload_file, locate, upload_flag
+from bot_func import upload_flag_off, upload_flag_on, go_home_start_menu, \
+    start_massage, button_upload_file, locate, upload_flag, last_massage_with_inline_kbrd
 from config import dp, bot
 from kbr import inline_kbr_start_menu, inline_kbr_upload_new_file, inline_kbr_new_file_apply
 from keyboards import in_kb_help, kb_apply_load1, in_kb_create_conf, kb_apply_load2
+
 
 logging.basicConfig(level=logging.INFO)
 # Face_Halper_Bot
@@ -94,9 +95,8 @@ async def moving_file(callback_query: types.CallbackQuery):
 ####################### Служебные #######################
 @dp.message_handler(content_types=types.ContentTypes.DOCUMENT)
 async def listen_file_downloads(msg: types.Message):
-
-    await delete_inline_button_in_message_handler(msg)
     """ Функция слушает документ и загружает его"""
+    #await delete_inline_button_in_message_handler(msg)
     if bot_func.upload_flag:
         if msg.document.mime_type == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':  # and message.document.file_name == 'Metro.xlsx': - Проверка по имени
             file_id = msg.document.file_id
@@ -120,8 +120,21 @@ async def listen_file_downloads(msg: types.Message):
 async def go_home_message(msg: types.Message):
     """ Эхо функция """
     await upload_flag_off()
+
+
+
+    print(bot_func.last_massage_with_inline_kbrd)
+
+    try:
+    #if bot_func.last_massage_with_inline_kbrd != 0: # Проверяем, не 1й ли запуск
+        await bot.edit_message_reply_markup(chat_id=bot_func.last_massage_with_inline_kbrd[0], message_id=bot_func.last_massage_with_inline_kbrd[1], reply_markup=types.InlineKeyboardMarkup())  # Отправляем отредактированное сообщение с пустой клавиатурой
+    except TypeError:
+        pass
     await msg.answer(start_massage, reply_markup=inline_kbr_start_menu)
-    await delete_inline_button_in_message_handler(msg)
+    bot_func.last_massage_with_inline_kbrd = (msg.chat.id, msg.message_id + 1)
+
+
+    # await delete_inline_button_in_message_handler(msg)
     await msg.delete()  # удаляет сообщение от пользователя
 
 if __name__ == '__main__':

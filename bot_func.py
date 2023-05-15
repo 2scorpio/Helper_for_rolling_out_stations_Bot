@@ -12,16 +12,18 @@ from keyboards import in_kb_help, kb_apply_load1, in_kb_create_conf, kb_apply_lo
 locate = os.path.dirname(__file__)
 start_massage = 'Как будет действовать хацкер?\nПоследний файл был загружен КЕМ и КОГДА'
 upload_flag = False  # Флаг загрузки
-f = True
+last_massage_with_inline_kbrd = 0
+chat_id = 0
+message_id = 0
 
 
-async def delete_inline_button_in_message_handler(msg): # Удаляет только из под message_handler
-    """ Удаление инлай клавиатуры с предыдущего сообщения для message_handler """
-    chat_id = msg.chat.id
-    message_id = msg.message_id - 1  # Идентификатор предыдущего сообщения
-    reply_markup = types.InlineKeyboardMarkup()  # Создаем пустую клавиатуру
-    await bot.edit_message_reply_markup(chat_id=chat_id, message_id=message_id,
-                                        reply_markup=reply_markup)  # Отправляем отредактированное сообщение с пустой клавиатурой
+# async def delete_inline_button_in_message_handler(msg): # Удаляет только из под message_handler
+#     """ Удаление инлай клавиатуры с предыдущего сообщения для message_handler """
+#     chat_id = msg.chat.id
+#     message_id = msg.message_id - 1  # Идентификатор предыдущего сообщения
+#     reply_markup = types.InlineKeyboardMarkup()  # Создаем пустую клавиатуру
+#     await bot.edit_message_reply_markup(chat_id=chat_id, message_id=message_id,
+#                                         reply_markup=reply_markup)  # Отправляем отредактированное сообщение с пустой клавиатурой
 
 
 async def upload_flag_off():
@@ -51,7 +53,6 @@ async def reload_reference_file_1(call: types.CallbackQuery):
     file_ref_locate = os.path.join(locate, 'reference_files', 'Metro.xlsx')
     with open(file_ref_locate, 'rb') as file:
         await bot.send_document(call.from_user.id, file)
-
     await bot.answer_callback_query(callback_query_id=call.id)  # Фиксим часы, отправляем боту ответ, что сообщение дошло
 
 
