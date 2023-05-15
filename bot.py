@@ -26,6 +26,7 @@ logging.basicConfig(level=logging.INFO)
 async def first_blood(msg: types.Message):
     """ Функция для 1‑го запуска """
     await msg.delete() # удаляет предыдущее сообщение пользователя
+    await delete_inline_button_in_message_handler(msg)
     await upload_flag_off()
     await msg.answer(start_massage, reply_markup=inline_kbr_start_menu)
 
@@ -102,8 +103,8 @@ async def moving_file(callback_query: types.CallbackQuery):
 @dp.message_handler(content_types=types.ContentTypes.DOCUMENT)
 async def listen_file_downloads(msg: types.Message):
     """ Функция слушает документ и загружает его"""
-    await delete_inline_button_in_message_handler(msg)
     if bot_func.upload_flag:
+        await delete_inline_button_in_message_handler(msg)
         if msg.document.mime_type == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':  # and message.document.file_name == 'Metro.xlsx': - Проверка по имени
             file_id = msg.document.file_id
             file_name = 'Metro.xlsx'  # Переопределяем имя
@@ -126,13 +127,8 @@ async def listen_file_downloads(msg: types.Message):
 async def go_home_message(msg: types.Message):
     """ Эхо функция """
     await upload_flag_off()
+    await delete_inline_button_in_message_handler(msg)
 
-    try:
-        await delete_inline_button_in_message_handler(msg)
-    except MessageCantBeEdited:
-        print("Сообщение не может быть отредактировано")
-    except MessageToEditNotFound:
-        print("Сообщение для редактирования не найдено")
 
 
 

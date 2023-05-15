@@ -5,7 +5,7 @@ import os
 import shutil
 
 from aiogram import executor, types
-from aiogram.utils.exceptions import ChatNotFound
+from aiogram.utils.exceptions import ChatNotFound, MessageCantBeEdited, MessageToEditNotFound
 
 from config import dp, bot
 from kbr import inline_kbr_upload_new_file, inline_kbr_start_menu, inline_kbr_new_file_apply
@@ -24,8 +24,13 @@ async def delete_inline_button_in_message_handler(msg): # Удаляет тол�
     chat_id = msg.chat.id
     message_id = msg.message_id - 1  # Идентификатор предыдущего сообщения
     reply_markup = types.InlineKeyboardMarkup()  # Создаем пустую клавиатуру
-    await bot.edit_message_reply_markup(chat_id=chat_id, message_id=message_id,
-                                        reply_markup=reply_markup)  # Отправляем отредактированное сообщение с пустой клавиатурой
+    try:
+        await bot.edit_message_reply_markup(chat_id=chat_id, message_id=message_id,
+                                            reply_markup=reply_markup)  # Отправляем отредактированное сообщение с пустой клавиатурой
+    except MessageCantBeEdited:
+        print("Сообщение не может быть отредактировано")
+    except MessageToEditNotFound:
+        print("Сообщение для редактирования не найдено")
 
 
 async def upload_flag_off():
