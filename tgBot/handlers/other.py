@@ -8,5 +8,6 @@ async def echo(msg: Message):
 
 
 def register_other_handlers(dp: Dispatcher) -> None:
-    # todo: register all other handlers
+    """ Регистрация хендлеров """
+    # Эхо функция всегда должна быть внизу
     dp.register_message_handler(echo, content_types=['text'])
