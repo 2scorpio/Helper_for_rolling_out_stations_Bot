@@ -4,14 +4,12 @@ from tgBot.keyboards.inline import inline_kbr_start_menu
 from tgBot.misc.text_for_messages import start_massage
 
 
-async def first_blood(msg: Message): # её нужно перенести
-    """ Функция для 1‑го запуска """
-    await msg.delete() # удаляет предыдущее сообщение пользователя
-    # await delete_inline_button_in_message_handler(msg) # Добавить позже
-    # await upload_flag_off() # Добавить позже
-    await msg.answer(start_massage, reply_markup=inline_kbr_start_menu)
+# async def first_blood(msg: Message): # её нужно перенести
+#     """ Функция для 1‑го запуска """
+#     print("Я в first_blood")
+#     await msg.delete() # удаляет предыдущее сообщение пользователя
 
 
 def register_other_handlers(dp: Dispatcher) -> None:
     """ Регистрация хендлеров """
-    dp.register_message_handler(first_blood, commands=['start'])
+    #dp.register_message_handler(first_blood, commands=['start'])
