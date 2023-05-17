@@ -11,8 +11,7 @@ async def first_blood(msg: Message) -> None:
     """ Функция для 1‑го запуска """
     print("Я в first_blood")
     await msg.delete()  # удаляет предыдущее сообщение пользователя
-    await msg.answer('Как будет действовать хацкер?\nПоследний файл был загружен КЕМ и КОГДА',
-                     reply_markup=inline_kbr_start_menu)
+
     chat_id = msg.chat.id
     message_id = msg.message_id - 1  # Идентификатор предыдущего сообщения
     reply_markup = types.InlineKeyboardMarkup()  # Создаем пустую клавиатуру
@@ -23,6 +22,9 @@ async def first_blood(msg: Message) -> None:
         print("Сообщение не может быть отредактировано")
     except MessageToEditNotFound:
         print("Сообщение для редактирования не найдено")
+
+    await msg.answer('Как будет действовать хацкер?\nПоследний файл был загружен КЕМ и КОГДА',
+                     reply_markup=inline_kbr_start_menu)
 
 
 
