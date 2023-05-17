@@ -12,6 +12,6 @@ async def first_blood(msg: Message): # её нужно перенести
     await msg.answer(start_massage, reply_markup=inline_kbr_start_menu)
 
 
-def register_other_handlers(dp: Dispatcher) -> None:
+def register_message_handlers(dp: Dispatcher) -> None:
     """ Регистрация хендлеров """
     dp.register_message_handler(first_blood, commands=['start'])
