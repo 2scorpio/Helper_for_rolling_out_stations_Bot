@@ -1,7 +1,6 @@
 from aiogram import Dispatcher
 from aiogram.types import Message
 from tgBot.keyboards.inline import inline_kbr_start_menu
-from tgBot.misc.text_for_messages import start_massage
 
 
 # async def first_blood(msg: Message): # её нужно перенести
