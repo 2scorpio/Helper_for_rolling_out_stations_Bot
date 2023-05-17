@@ -1,13 +1,19 @@
 from aiogram import Dispatcher, types
 from aiogram.types import Message
 
+from tgBot.handlers.user.main import first_blood
+#from tgBot.misc.states import flag_Main_menu
 
-async def echo(msg: Message):
+flag_Main_menu = True
+
+async def echo(msg: Message) -> None:
     """ Эхо функция """
+    if flag_Main_menu:
+        await msg.delete()  # удаляет сообщение от пользователя
+    else:
     # await upload_flag_off()
     # await delete_inline_button_in_message_handler(msg)
-    # await msg.answer(start_massage, reply_markup=inline_kbr_start_menu)  # Вызов стартового меню
-    await msg.delete()  # удаляет сообщение от пользователя
+        await first_blood(msg)  # Вызов стартового меню
 
 
 def register_other_handlers(dp: Dispatcher) -> None:

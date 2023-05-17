@@ -1,23 +1,28 @@
 from aiogram import Dispatcher
 
-from tgBot.handlers.user.for_message_handler import register_message_handlers
+
 from aiogram.types import Message
-from ...keyboards.inline import inline_kbr_start_menu
-from ...misc.messages import start_massage
+from tgBot.keyboards.inline import inline_kbr_start_menu
+from tgBot.misc.text_for_messages import start_massage
 
 
-async def __first_blood(msg: Message) -> None:
+
+async def first_blood(msg: Message) -> None:
     """ Функция для 1‑го запуска """
-    await msg.delete() # удаляет предыдущее сообщение пользователя
+    await msg.answer(start_massage, reply_markup=inline_kbr_start_menu)
+    #if flag_Main_menu:
+        #flag_Main_menu = True
+
     # await delete_inline_button_in_message_handler(msg) # Добавить позже
     # await upload_flag_off() # Добавить позже
-    await msg.answer(start_massage, reply_markup=inline_kbr_start_menu)
+    # await msg.delete()  # удаляет предыдущее сообщение пользователя
+
 
 
 def register_user_handlers(dp: Dispatcher) -> None:
     """ Регистрируем модули или функции """
-    dp.register_message_handler(__first_blood, commands=['start'])
-    dp.register_message_handler(__first_blood, content_types=["text"], text="start")
+    dp.register_message_handler(first_blood, commands=['start'])
+    dp.register_message_handler(first_blood, content_types=["text"], text="start")
 
 
     """ Пример """
