@@ -1,6 +1,6 @@
 from aiogram import Dispatcher, types
 from aiogram.types import Message
-from kbr import inline_kbr_start_menu
+from tgBot.keyboards.inline import inline_kbr_start_menu
 from tgBot.misc.other_bot_funck import delete_inline_button_in_message_handler
 from tgBot.misc.text_messages import start_menu_massage
 

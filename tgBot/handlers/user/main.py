@@ -1,6 +1,6 @@
 from aiogram import Dispatcher
 from aiogram.types import Message
-from tgBot.handlers.user.for_callback_query_handler import register_callback_handlers
+from tgBot.handlers.user.for_callback_query_handler import callback_handlers
 from tgBot.keyboards.inline import inline_kbr_start_menu
 from tgBot.misc.other_bot_funck import delete_inline_button_in_message_handler
 from tgBot.misc.text_messages import start_menu_massage
@@ -18,7 +18,7 @@ async def first_blood(msg: Message) -> None:
 def register_user_handlers(dp: Dispatcher) -> None:
     """ Регистрируем модули или функции """
     # region
-    register_callback_handlers(dp)
+    callback_handlers(dp)
 
     # local
     dp.register_message_handler(first_blood, commands=['8'], content_types=['text'], text="8")
