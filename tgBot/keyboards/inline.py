@@ -15,7 +15,7 @@ inline_kbr_start_menu.add(InlineKeyboardButton(text='Справка'.upper(), ca
 
 inline_kbr_upload_new_file = InlineKeyboardMarkup()
 """ Клавиатура меню 1го уровня меню загрузка файла """
-inline_kbr_upload_new_file.add(InlineKeyboardButton(text="Скачать образец", callback_data="upload_Download_reference_file"))
+inline_kbr_upload_new_file.add(InlineKeyboardButton(text="Скачать образец", callback_data="upload_download_reference_file"))
 inline_kbr_upload_new_file.add(InlineKeyboardButton(text="Назад", callback_data="upload_Back"))
 
 
