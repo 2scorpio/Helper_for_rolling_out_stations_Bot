@@ -2,7 +2,6 @@ from aiogram import Dispatcher, types
 
 from aiogram.types import Message
 from aiogram.utils.exceptions import MessageCantBeEdited, MessageToEditNotFound
-
 from config import bot
 from tgBot.keyboards.inline import inline_kbr_start_menu
 
