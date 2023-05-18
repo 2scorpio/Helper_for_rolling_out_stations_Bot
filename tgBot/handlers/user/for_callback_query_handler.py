@@ -3,9 +3,11 @@ from aiogram.bot import bot
 from aiogram.dispatcher import FSMContext
 
 from aiogram import Bot, types
+
+
 from tgBot.keyboards.inline import inline_kbr_upload_new_file, inline_kbr_start_menu
 from tgBot.misc.states import MyFlags
-from tgBot.misc.other_bot_funck import delete_inline_button_in_message_handler
+from tgBot.misc.other_bot_funck import delete_inline_and_msg, delete_inline_and_msg
 from tgBot.misc.text_messages import start_menu_massage
 
 
@@ -27,7 +29,7 @@ async def mein_menu_answer(callback_query: types.CallbackQuery, state: FSMContex
         await callback_query.answer('start_cmd_6')
     if call == 'start_upload':
         await callback_query.message.answer('Бот ожидает загрузки файла', reply_markup=inline_kbr_upload_new_file)
-        await callback_query.message.edit_reply_markup()  # Удаляет клавиатуру при нажатии
+        await delete_inline_and_msg(callback_query.message)  # Удаление инлай клавиатуры с предыдущего сообщения и сообщения пользователя
         await state.set_state(MyFlags.UPLOAD)  # Ставим флаг загрузки файла
     else:
         await callback_query.answer(
@@ -43,15 +45,13 @@ async def upload_menu(callback_query: types.CallbackQuery, state: FSMContext) ->
         await callback_query.answer('upload_download_reference_file')
     if call == 'upload_Back':
         await state.finish()
-        await callback_query.message.delete()  # удаляет предыдущее сообщение пользователя
-        await delete_inline_button_in_message_handler(callback_query.message)
-        #await callback_query.message.edit_reply_markup()  # Удаляет клавиатуру при нажатии
+        # await first_blood(callback_query.message)
+        await delete_inline_and_msg(callback_query.message)  # Удаление инлай клавиатуры с предыдущего сообщения и сообщения пользователя
         await callback_query.message.answer(text=start_menu_massage, reply_markup=inline_kbr_start_menu)
-        #await types.Message.answer(text=start_menu_massage, reply_markup=inline_kbr_start_menu)
     else:
         await state.finish()
         await callback_query.message.delete()  # удаляет предыдущее сообщение пользователя
-        await delete_inline_button_in_message_handler(callback_query.message)
+        await delete_inline_and_msg(callback_query.message)
 
 
 def callback_handlers(dp: Dispatcher) -> None:

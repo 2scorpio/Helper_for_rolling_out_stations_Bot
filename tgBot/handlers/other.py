@@ -3,15 +3,13 @@ from aiogram.types import Message
 
 from tgBot.handlers.user.main import first_blood
 from tgBot.keyboards.inline import inline_kbr_start_menu
-from tgBot.misc.other_bot_funck import delete_inline_button_in_message_handler
+from tgBot.misc.other_bot_funck import delete_inline_and_msg, delete_inline_and_msg
 from tgBot.misc.text_messages import start_menu_massage
 
 
 async def echo(msg: Message) -> None:
     """ Эхо функция """
     print("Я в echo")
-    await delete_inline_button_in_message_handler(msg)  # Удаление инлай клавиатуры с предыдущего сообщения для message_handler
-    await msg.delete()  # удаляет сообщение от пользователя
     await first_blood(msg)
 
 
