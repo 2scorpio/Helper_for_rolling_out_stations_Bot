@@ -2,6 +2,7 @@ from aiogram import Dispatcher, types
 from aiogram.types import Message
 from kbr import inline_kbr_start_menu
 from tgBot.misc.other_bot_funck import delete_inline_button_in_message_handler
+from tgBot.misc.text_messages import start_menu_massage
 
 
 async def echo(msg: Message) -> None:
@@ -9,8 +10,7 @@ async def echo(msg: Message) -> None:
     print("Я в echo")
     await msg.delete()  # удаляет сообщение от пользователя
     await delete_inline_button_in_message_handler(msg)  # Удаление инлай клавиатуры с предыдущего сообщения для message_handler
-    await msg.answer('Как будет действовать хацкер?\nПоследний файл был загружен КЕМ и КОГДА',
-                     reply_markup=inline_kbr_start_menu)
+    await msg.answer(start_menu_massage, reply_markup=inline_kbr_start_menu)
 
 
 def register_other_handlers(dp: Dispatcher) -> None:
