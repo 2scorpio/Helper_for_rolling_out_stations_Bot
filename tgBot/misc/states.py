@@ -1,6 +1,9 @@
-class FSM():
-    flag_Main_menu = False
-    upload_flag = False
+from typing import Final
 
-    def __init__(self):
-        self.flag_Main_menu = self.flag_Main_menu
+from aiogram.dispatcher import FSMContext
+from aiogram.dispatcher.filters.state import StatesGroup, State
+
+
+class My_flags(StatesGroup):
+    is_upload = False
+
