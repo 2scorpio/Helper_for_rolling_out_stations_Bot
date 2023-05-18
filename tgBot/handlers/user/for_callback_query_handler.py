@@ -42,6 +42,8 @@ async def upload_menu(callback_query: types.CallbackQuery, state: FSMContext) ->
     call = callback_query.data
     print(f'Я в {call}')
     if call == 'upload_download_reference_file':
+        # todo: проблема здесь
+        await delete_inline_and_msg(callback_query.message)  # Удаление инлай клавиатуры с предыдущего сообщения и сообщения пользователя
         await callback_query.answer('upload_download_reference_file')
     if call == 'upload_Back':
         await state.finish()
