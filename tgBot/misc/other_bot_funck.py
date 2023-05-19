@@ -1,5 +1,6 @@
 from aiogram import types
-from aiogram.utils.exceptions import MessageCantBeEdited, MessageToEditNotFound, MessageToDeleteNotFound
+from aiogram.utils.exceptions import MessageCantBeEdited, MessageToEditNotFound, MessageToDeleteNotFound, \
+    MessageNotModified
 from config import bot
 
 
@@ -20,6 +21,9 @@ async def delete_inline_and_msg(msg): # Удаляет только из под 
     except MessageToDeleteNotFound:
         print("Сообщение для удаления не найдено")
         pass
+    except MessageNotModified:
+        print("Сообщение для удаления не найдено")
+        pass
 
 
 async def delete_inline_key_only(callback_query): # Удаляет только из под message_handler
@@ -32,5 +36,8 @@ async def delete_inline_key_only(callback_query): # Удаляет только 
         pass
     except MessageCantBeEdited:
         print("Сообщение не может быть отредактировано")
+        pass
+    except MessageNotModified:
+        print("Сообщение для удаления не найдено")
         pass
 
