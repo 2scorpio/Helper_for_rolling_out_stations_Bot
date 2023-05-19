@@ -3,7 +3,7 @@ from aiogram.dispatcher import FSMContext
 from tgBot.misc.states import MyFlags
 
 
-
+# async def upload_menu_msg(callback_query: types.CallbackQuery, state: FSMContext) -> None:
 
 
 # inline_kbr_upload_new_file

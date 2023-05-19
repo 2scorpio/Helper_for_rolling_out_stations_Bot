@@ -58,7 +58,7 @@ async def start_menu(callback_query: types.CallbackQuery):
     call = callback_query.data
     if call == 'upload_Download_reference_file':
         """ Кнопка "Скачать образец" """
-        file_ref_locate = os.path.join(locate, 'reference_files', 'Metro.xlsx') # Локация файла
+        file_ref_locate = os.path.join(locate, 'reference', 'Metro.xlsx') # Локация файла
         with open(file_ref_locate, 'rb') as file:
             await bot.send_document(callback_query.from_user.id, file)
         await bot.answer_callback_query(callback_query_id=callback_query.id) #  Фиксим часы, отправляем боту ответ, что сообщение дошло

@@ -22,3 +22,15 @@ async def delete_inline_and_msg(msg): # Удаляет только из под 
         pass
 
 
+async def delete_inline_key_only(callback_query): # Удаляет только из под message_handler
+    try:
+        await callback_query.message.edit_reply_markup()
+    except MessageToEditNotFound:
+        print("Сообщение для редактирования не найдено")
+    except MessageToDeleteNotFound:
+        print("Сообщение для удаления не найдено")
+        pass
+    except MessageCantBeEdited:
+        print("Сообщение не может быть отредактировано")
+        pass
+
