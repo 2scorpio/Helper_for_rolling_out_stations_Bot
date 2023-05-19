@@ -1,16 +1,19 @@
 import os
 
+from tgBot.main import Bot
 from aiogram import Dispatcher, types
 from aiogram.bot import bot
 from aiogram.dispatcher import FSMContext
 
-from aiogram import Bot, types
+
+from aiogram import types
 
 from tgBot.handlers.other import first_blood
 from tgBot.keyboards.inline import inline_kbr_upload_new_file, inline_kbr_start_menu
 from tgBot.misc.states import MyFlags
 from tgBot.misc.other_bot_funck import delete_inline_and_msg, delete_inline_key_only
 from tgBot.misc.text_messages import start_menu_massage
+from tgBot.utility.main import locate
 
 
 async def mein_menu_answer(callback_query: types.CallbackQuery, state: FSMContext) -> None:
@@ -48,10 +51,11 @@ async def upload_menu_call(callback_query: types.CallbackQuery, state: FSMContex
     if call == 'upload_download_reference_file':
         # await state.finish()
         await delete_inline_key_only(callback_query)
-        #await delete_inline_and_msg(callback_query.message)  # Удаление инлай клавиатуры с предыдущего сообщения и сообщения пользователя
-        # file_ref_locate = os.path.join(locate, 'data', 'reference', 'Metro.xlsx')  # Локация файла
-        # with open(file_ref_locate, 'rb') as file:
-        #     await bot.send_document(callback_query.from_user.id, file)
+        file_ref_locate = os.path.join(locate, 'data', 'reference', 'Metro.xlsx')  # Локация файла
+        print(file_ref_locate)
+        if os.path.exists(file_ref_locate):
+            with open(file_ref_locate, 'rb') as file:
+                await bot.Bot.send_document(callback_query.message.chat.id, file)
     if call == 'upload_Back':
         # await state.finish()
         await first_blood(callback_query.message)

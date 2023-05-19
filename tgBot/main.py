@@ -6,7 +6,6 @@ from tgBot.filters import register_all_filters
 from tgBot.misc import TgKeys
 from tgBot.handlers import register_all_handlers
 from tgBot.database.models import register_models
-from tgBot import utility
 
 
 async def __on_start_up(dp: Dispatcher) -> None:
