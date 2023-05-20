@@ -16,12 +16,12 @@ inline_kbr_start_menu.add(InlineKeyboardButton(text='Справка'.upper(), ca
 inline_kbr_upload_new_file = InlineKeyboardMarkup()
 """ Клавиатура меню 1го уровня меню загрузка файла """
 inline_kbr_upload_new_file.add(InlineKeyboardButton(text="Скачать образец", callback_data="upload_download_reference_file"))
-inline_kbr_upload_new_file.add(InlineKeyboardButton(text="Назад", callback_data="upload_Back"))
+inline_kbr_upload_new_file.add(InlineKeyboardButton(text="Назад", callback_data="upload_back"))
 
 
 inline_kbr_new_file_apply = InlineKeyboardMarkup()
 """ Клавиатура меню 2го уровня меню загрузка файла """
 inline_kbr_new_file_apply.add(InlineKeyboardButton(text="Применить файл", callback_data="apply_moving_file")) # callback_data="apply"))
-inline_kbr_new_file_apply.add(InlineKeyboardButton(text="Оставить старый файл", callback_data="apply_back"))
+inline_kbr_new_file_apply.add(InlineKeyboardButton(text="Оставить старый файл", callback_data="upload_back"))
 
 
