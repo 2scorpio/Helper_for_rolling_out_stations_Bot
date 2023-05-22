@@ -11,6 +11,8 @@ inline_kbr_start_menu.add(InlineKeyboardButton(text='5. - Удалить дан�
 inline_kbr_start_menu.add(InlineKeyboardButton(text='6. - Обновить поля camera и place_name'.upper(), callback_data="start_cmd_6")) # callback_data="update_filed_cam"))
 inline_kbr_start_menu.add(InlineKeyboardButton(text="Обновить файл".upper(), callback_data="start_upload"))
 inline_kbr_start_menu.add(InlineKeyboardButton(text='Справка'.upper(), callback_data="start_help"))
+inline_kbr_start_menu.add(InlineKeyboardButton(text='Получить данные пользователя'.upper(), callback_data="user_data"))
+
 
 
 inline_kbr_upload_new_file = InlineKeyboardMarkup()

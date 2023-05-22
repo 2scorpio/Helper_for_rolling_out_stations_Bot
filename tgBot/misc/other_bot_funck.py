@@ -6,7 +6,19 @@ from config import bot
 
 async def delete_inline_and_msg(msg):
     """ Удаление инлай клавиатуры и предыдущего сообщения """
-    await msg.delete()  # удаляет сообщение от пользователя
+    try:
+        await msg.delete()  # удаляет сообщение от пользователя
+    except MessageToEditNotFound:
+        print("Сообщение для редактирования не найдено")
+    except MessageToDeleteNotFound:
+        print("Сообщение для удаления не найдено")
+        pass
+    except MessageCantBeEdited:
+        print("Сообщение не может быть отредактировано")
+        pass
+    except MessageNotModified:
+        print("Сообщение для удаления не найдено")
+        pass
     chat_id = msg.chat.id
     message_id = msg.message_id - 1 # Идентификатор предыдущего сообщения
     reply_markup = types.InlineKeyboardMarkup()  # Создаем пустую клавиатуру

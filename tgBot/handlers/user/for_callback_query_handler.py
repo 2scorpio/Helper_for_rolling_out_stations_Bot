@@ -1,12 +1,15 @@
 import os
 import shutil
+import io
 
+from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram import Dispatcher
 from aiogram.dispatcher import FSMContext
 from aiogram import types, Bot
 from tgBot.handlers.other import first_blood
 from tgBot.keyboards.inline import inline_kbr_upload_new_file
-from tgBot.misc.other_bot_funck import delete_inline_and_msg, delete_inline_key_only_last_msg
+from tgBot.misc.other_bot_funck import delete_inline_and_msg, delete_inline_key_only_last_msg, \
+    delete_inline_key_only_first_msg
 from tgBot.misc.states import MyFlags
 from tgBot.utility.main import locate
 
@@ -29,7 +32,7 @@ async def mein_menu_answer(callback_query: types.CallbackQuery, state: FSMContex
         await callback_query.answer('start_cmd_6')
     if call == 'start_upload':
         await callback_query.message.answer('Бот ожидает загрузки файла', reply_markup=inline_kbr_upload_new_file)
-        await delete_inline_and_msg(callback_query.message)  # Удаление инлай клавиатуры с предыдущего сообщения и сообщения пользователя
+        await delete_inline_and_msg(callback_query.message)
         await state.set_state(MyFlags.UPLOAD)  # Ставим флаг загрузки файла
     else:
         await callback_query.answer(
@@ -83,9 +86,22 @@ async def moving_file(callback_query: types.CallbackQuery, state: FSMContext):
     await first_blood(callback_query.message)
 
 
+async def get_user_data(callback_query: types.CallbackQuery):
+    bot: Bot = callback_query.bot
+    user_data = str(callback_query)
+    file_stream = io.BytesIO(user_data.encode('utf-8'))
+    file_stream = types.InputFile(file_stream, filename='user_data')
+    await delete_inline_key_only_first_msg(callback_query.message)
+    await bot.send_document(chat_id=callback_query.message.chat.id, document=file_stream)
+    await first_blood(callback_query.message)
+
+
+
+
 
 def callback_handlers(dp: Dispatcher) -> None:
     """ Регистрируем модули или функции """
     dp.register_callback_query_handler(mein_menu_answer, lambda call: call.data.startswith('start_'))
     dp.register_callback_query_handler(upload_menu_call, lambda call: call.data.startswith('upload_'), state=MyFlags.UPLOAD)
     dp.register_callback_query_handler(moving_file, lambda call: call.data == 'apply_moving_file', state=MyFlags.UPLOAD)
+    dp.register_callback_query_handler(get_user_data, lambda call: call.data == 'user_data')
