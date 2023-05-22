@@ -1,8 +1,7 @@
 import os
 import shutil
 import io
-
-from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from tgBot.utility.main import locate
 from aiogram import Dispatcher
 from aiogram.dispatcher import FSMContext
 from aiogram import types, Bot
@@ -11,26 +10,39 @@ from tgBot.keyboards.inline import inline_kbr_upload_new_file
 from tgBot.misc.other_bot_funck import delete_inline_and_msg, delete_inline_key_only_last_msg, \
     delete_inline_key_only_first_msg
 from tgBot.misc.states import MyFlags
-from tgBot.utility.main import locate
+from tgBot.utility.stationAll_V6 import main_station
 
 
 async def mein_menu_answer(callback_query: types.CallbackQuery, state: FSMContext) -> None:
     """ Эта функция отвечает на все колбеки главного меню """
+    bot: Bot = callback_query.bot
     call = callback_query.data
-    print(f'Я в mein_menu_answer')
+    file_locate_output = os.path.join(locate, 'data', 'output')  # Локация файла
+    files = os.listdir(file_locate_output)
+    # for file in files:
+    #     os.remove(file)
     if call == 'start_cmd_1':
-        await callback_query.answer('start_cmd_1')
-    if call == 'start_cmd_2':
-        await callback_query.answer('start_cmd_2')
-    if call == 'start_cmd_3':
-        await callback_query.answer('start_cmd_3')
-    if call == 'start_cmd_4':
-        await callback_query.answer('start_cmd_4')
-    if call == 'start_cmd_5':
-        await callback_query.answer('start_cmd_5')
-    if call == 'start_cmd_6':
-        await callback_query.answer('start_cmd_6')
-    if call == 'start_upload':
+        await main_station(1)
+    elif call == 'start_cmd_2':
+        await main_station(2)
+    elif call == 'start_cmd_3':
+
+        await main_station(3)
+        files = os.listdir(file_locate_output)
+        for file in files:
+            file_locate = os.path.join(file_locate_output, file)  # Локация файла
+            with open(file_locate, 'rb') as foo:
+                await bot.send_document(callback_query.from_user.id, document=foo)
+            #os.remove(file_locate)
+
+
+    elif call == 'start_cmd_4':
+        await main_station(4)
+    elif call == 'start_cmd_5':
+        await main_station(5)
+    elif call == 'start_cmd_6':
+        await main_station(6)
+    elif call == 'start_upload':
         await callback_query.message.answer('Бот ожидает загрузки файла', reply_markup=inline_kbr_upload_new_file)
         await delete_inline_and_msg(callback_query.message)
         await state.set_state(MyFlags.UPLOAD)  # Ставим флаг загрузки файла
@@ -87,6 +99,7 @@ async def moving_file(callback_query: types.CallbackQuery, state: FSMContext):
 
 
 async def get_user_data(callback_query: types.CallbackQuery):
+    """ Функция получает информацио о пльзвателе и отдаёт файл с неё """
     bot: Bot = callback_query.bot
     user_data = str(callback_query)
     file_stream = io.BytesIO(user_data.encode('utf-8'))

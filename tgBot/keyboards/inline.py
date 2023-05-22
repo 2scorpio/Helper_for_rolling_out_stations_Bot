@@ -9,6 +9,7 @@ inline_kbr_start_menu.add(InlineKeyboardButton(text='3. - Изменить зн�
 inline_kbr_start_menu.add(InlineKeyboardButton(text='4. - Изменить значение поля camera'.upper(), callback_data="start_cmd_4")) # callback_data="change_the_camera_value"))
 inline_kbr_start_menu.add(InlineKeyboardButton(text='5. - Удалить данные в БД'.upper(), callback_data="start_cmd_5")) # callback_data="delete_data_in_bd"))
 inline_kbr_start_menu.add(InlineKeyboardButton(text='6. - Обновить поля camera и place_name'.upper(), callback_data="start_cmd_6")) # callback_data="update_filed_cam"))
+inline_kbr_start_menu.add(InlineKeyboardButton(text='7. - Добавить поле ID в Сфере'.upper(), callback_data="start_cmd_7")) # callback_data="update_filed_cam"))
 inline_kbr_start_menu.add(InlineKeyboardButton(text="Обновить файл".upper(), callback_data="start_upload"))
 inline_kbr_start_menu.add(InlineKeyboardButton(text='Справка'.upper(), callback_data="start_help"))
 inline_kbr_start_menu.add(InlineKeyboardButton(text='Получить данные пользователя'.upper(), callback_data="user_data"))
