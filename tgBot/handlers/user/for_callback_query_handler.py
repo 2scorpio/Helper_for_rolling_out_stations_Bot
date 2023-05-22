@@ -23,10 +23,13 @@ async def mein_menu_answer(callback_query: types.CallbackQuery, state: FSMContex
     #     os.remove(file)
     if call == 'start_cmd_1':
         await main_station(1)
+        await bot.answer_callback_query(callback_query_id=callback_query.id)
     elif call == 'start_cmd_2':
         await main_station(2)
+        await bot.answer_callback_query(callback_query_id=callback_query.id)
     elif call == 'start_cmd_3':
 
+        await delete_inline_key_only_last_msg(callback_query)
         await main_station(3)
         files = os.listdir(file_locate_output)
         for file in files:
@@ -34,14 +37,19 @@ async def mein_menu_answer(callback_query: types.CallbackQuery, state: FSMContex
             with open(file_locate, 'rb') as foo:
                 await bot.send_document(callback_query.from_user.id, document=foo)
             #os.remove(file_locate)
+        # await bot.answer_callback_query(callback_query_id=callback_query.id)
+        await first_blood(callback_query.message)
 
 
     elif call == 'start_cmd_4':
         await main_station(4)
+        await bot.answer_callback_query(callback_query_id=callback_query.id)
     elif call == 'start_cmd_5':
         await main_station(5)
+        await bot.answer_callback_query(callback_query_id=callback_query.id)
     elif call == 'start_cmd_6':
         await main_station(6)
+        await bot.answer_callback_query(callback_query_id=callback_query.id)
     elif call == 'start_upload':
         await callback_query.message.answer('Бот ожидает загрузки файла', reply_markup=inline_kbr_upload_new_file)
         await delete_inline_and_msg(callback_query.message)
