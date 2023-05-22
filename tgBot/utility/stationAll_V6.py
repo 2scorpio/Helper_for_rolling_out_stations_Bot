@@ -15,7 +15,6 @@ async def transliteration(text):
 
 
 async def main_station(day):
-    print('Зпустил main_station')
     current_file = os.path.join(locate, 'data', 'current_file', 'Metro.xlsx')
     srv = os.path.join(locate, 'data', 'output', 'Server_FP.sql')
     stat = os.path.join(locate, 'data', 'output', 'STATION.text')
@@ -42,7 +41,6 @@ async def main_station(day):
     t = 0
     pd.options.mode.chained_assignment = None
     df1 = pd.read_excel(current_file, sheet_name='Лист1')
-    print('Защёл в цикл')
     for index, row in df1.iterrows():
         station = await transliteration(str(row['Станция'].lower().rstrip()
                                       .replace('. ', ' ').replace('  ', ' ').replace('.', ' ')))

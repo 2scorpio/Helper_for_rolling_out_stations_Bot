@@ -18,9 +18,6 @@ async def mein_menu_answer(callback_query: types.CallbackQuery, state: FSMContex
     bot: Bot = callback_query.bot
     call = callback_query.data
     file_locate_output = os.path.join(locate, 'data', 'output')  # Локация файла
-    files = os.listdir(file_locate_output)
-    # for file in files:
-    #     os.remove(file)
     if call == 'start_cmd_1':
         await main_station(1)
         await bot.answer_callback_query(callback_query_id=callback_query.id)
@@ -30,15 +27,25 @@ async def mein_menu_answer(callback_query: types.CallbackQuery, state: FSMContex
     elif call == 'start_cmd_3':
 
         await delete_inline_key_only_last_msg(callback_query)
-        await main_station(3)
+        try:
+            await main_station(int(call[-1]))
+        except KeyError:
+            files = os.listdir(file_locate_output)
+            for file in files:
+                file_locate = os.path.join(file_locate_output, file)  # Локация файла
+                os.remove(file_locate)
+            await callback_query.answer('Что то пошло не так, проверьте файл!', show_alert=True)
+        file_locate_output = os.path.join(locate, 'data', 'output')  # Локация файла
         files = os.listdir(file_locate_output)
         for file in files:
             file_locate = os.path.join(file_locate_output, file)  # Локация файла
             with open(file_locate, 'rb') as foo:
                 await bot.send_document(callback_query.from_user.id, document=foo)
-            #os.remove(file_locate)
-        # await bot.answer_callback_query(callback_query_id=callback_query.id)
+            os.remove(file_locate)
+        await bot.answer_callback_query(callback_query_id=callback_query.id)
         await first_blood(callback_query.message)
+        await callback_query.answer('Готово!')
+
 
 
     elif call == 'start_cmd_4':
@@ -49,6 +56,9 @@ async def mein_menu_answer(callback_query: types.CallbackQuery, state: FSMContex
         await bot.answer_callback_query(callback_query_id=callback_query.id)
     elif call == 'start_cmd_6':
         await main_station(6)
+        await bot.answer_callback_query(callback_query_id=callback_query.id)
+    elif call == 'start_cmd_7':
+        await main_station(7)
         await bot.answer_callback_query(callback_query_id=callback_query.id)
     elif call == 'start_upload':
         await callback_query.message.answer('Бот ожидает загрузки файла', reply_markup=inline_kbr_upload_new_file)
@@ -90,7 +100,6 @@ async def upload_menu_call(callback_query: types.CallbackQuery, state: FSMContex
             os.remove(tmp_file_locate)
 
 
-
 async def moving_file(callback_query: types.CallbackQuery, state: FSMContext):
     """ Меню приминения нового файла """
     call = callback_query.data
@@ -101,7 +110,8 @@ async def moving_file(callback_query: types.CallbackQuery, state: FSMContext):
     try:
         shutil.move(file, destination_folder)
     except FileNotFoundError:
-        await call.answer('Упс, сообщите разработчику, что временный файл протерялся и его обновить не удалось.', show_alert=True)
+        await call.answer('Упс, сообщите разработчику, что временный файл протерялся и его обновить не удалось.',
+                          show_alert=True)
     await state.finish()
     await first_blood(callback_query.message)
 
@@ -117,12 +127,10 @@ async def get_user_data(callback_query: types.CallbackQuery):
     await first_blood(callback_query.message)
 
 
-
-
-
 def callback_handlers(dp: Dispatcher) -> None:
     """ Регистрируем модули или функции """
     dp.register_callback_query_handler(mein_menu_answer, lambda call: call.data.startswith('start_'))
-    dp.register_callback_query_handler(upload_menu_call, lambda call: call.data.startswith('upload_'), state=MyFlags.UPLOAD)
+    dp.register_callback_query_handler(upload_menu_call, lambda call: call.data.startswith('upload_'),
+                                       state=MyFlags.UPLOAD)
     dp.register_callback_query_handler(moving_file, lambda call: call.data == 'apply_moving_file', state=MyFlags.UPLOAD)
     dp.register_callback_query_handler(get_user_data, lambda call: call.data == 'user_data')
