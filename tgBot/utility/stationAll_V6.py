@@ -1,6 +1,6 @@
 import os, os.path
 import pandas as pd
-from tgBot.utility.main import locate
+from tgBot.utility.main import locate_tgbot_utility
 
 
 async def transliteration(text):
@@ -15,14 +15,14 @@ async def transliteration(text):
 
 
 async def main_station(day):
-    current_file = os.path.join(locate, 'data', 'current_file', 'Metro.xlsx')
-    srv = os.path.join(locate, 'data', 'output', 'Server_FP.sql')
-    stat = os.path.join(locate, 'data', 'output', 'STATION.text')
-    ln = os.path.join(locate, 'data', 'output', 'Luna.text')
-    dl = os.path.join(locate, 'data', 'output', 'Delete_Server_FP.sql')
-    upnum = os.path.join(locate, 'data', 'output', 'UPDATE number.sql')
-    upcam = os.path.join(locate, 'data', 'output', 'UPDATE camera.sql')
-    upid = os.path.join(locate, 'data', 'output', 'UPDATE id in sphere.sql')
+    current_file = os.path.join(locate_tgbot_utility, 'data', 'current_file', 'Metro.xlsx')
+    srv = os.path.join(locate_tgbot_utility, 'data', 'output', 'Server_FP.sql')
+    stat = os.path.join(locate_tgbot_utility, 'data', 'output', 'STATION.text')
+    ln = os.path.join(locate_tgbot_utility, 'data', 'output', 'Luna.text')
+    dl = os.path.join(locate_tgbot_utility, 'data', 'output', 'Delete_Server_FP.sql')
+    upnum = os.path.join(locate_tgbot_utility, 'data', 'output', 'UPDATE number.sql')
+    upcam = os.path.join(locate_tgbot_utility, 'data', 'output', 'UPDATE camera.sql')
+    upid = os.path.join(locate_tgbot_utility, 'data', 'output', 'UPDATE id in sphere.sql')
     instances = []
     cameras = []
     categories = []

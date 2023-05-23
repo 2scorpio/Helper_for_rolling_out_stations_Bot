@@ -1,8 +1,7 @@
-import os
 from aiogram import Dispatcher, types, Bot
 from aiogram.dispatcher import FSMContext
 from tgBot.misc.text_messages import start_menu_massage
-from tgBot.utility.main import locate
+from tgBot.utility.main import *
 from tgBot.misc.other_bot_funck import delete_inline_key_only_first_msg, delete_inline_and_msg
 from tgBot.misc.states import MyFlags
 from tgBot.keyboards.inline import inline_kbr_upload_new_file, inline_kbr_new_file_apply, inline_kbr_start_menu
@@ -17,7 +16,7 @@ async def upload_menu_msg(msg: types.Message, state: FSMContext) -> None:
             file_name = 'Metro.xlsx'  # Переопределяем имя
             file_path = await bot.get_file(file_id)  # Скачиваем файл
             downloaded_file = await bot.download_file(file_path.file_path)
-            file = os.path.join(locate, 'data', 'current_file', file_name)
+            file = os.path.join(locate_tgbot_utility_data_current_file, file_name)
             with open(file, 'wb') as foo:
                 foo.write(downloaded_file.read())
             await delete_inline_key_only_first_msg(msg)
