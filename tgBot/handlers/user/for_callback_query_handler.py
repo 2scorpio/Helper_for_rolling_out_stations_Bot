@@ -100,20 +100,20 @@ async def upload_menu_call(callback_query: types.CallbackQuery, state: FSMContex
             os.remove(tmp_file_locate)
 
 
-async def moving_file(callback_query: types.CallbackQuery, state: FSMContext):
-    """ Меню приминения нового файла """
-    call = callback_query.data
-    print(f'Я в moving_file')
-    file = os.path.join(locate, 'data', 'tmp', 'Metro.xlsx')
-    destination_folder = os.path.join(locate, 'data', 'current_file', 'Metro.xlsx')
-    await callback_query.answer('Готово!')
-    try:
-        shutil.move(file, destination_folder)
-    except FileNotFoundError:
-        await call.answer('Упс, сообщите разработчику, что временный файл протерялся и его обновить не удалось.',
-                          show_alert=True)
-    await state.finish()
-    await first_blood(callback_query.message)
+# async def moving_file(callback_query: types.CallbackQuery, state: FSMContext):
+#     """ Меню приминения нового файла """
+#     call = callback_query.data
+#     print(f'Я в moving_file')
+#     file = os.path.join(locate, 'data', 'tmp', 'Metro.xlsx')
+#     destination_folder = os.path.join(locate, 'data', 'current_file', 'Metro.xlsx')
+#     await callback_query.answer('Готово!')
+#     try:
+#         shutil.move(file, destination_folder)
+#     except FileNotFoundError:
+#         await call.answer('Упс, сообщите разработчику, что временный файл протерялся и его обновить не удалось.',
+#                           show_alert=True)
+#     await state.finish()
+#     await first_blood(callback_query.message)
 
 
 async def get_user_data(callback_query: types.CallbackQuery):
@@ -121,7 +121,7 @@ async def get_user_data(callback_query: types.CallbackQuery):
     bot: Bot = callback_query.bot
     user_data = str(callback_query)
     file_stream = io.BytesIO(user_data.encode('utf-8'))
-    file_stream = types.InputFile(file_stream, filename='user_data')
+    file_stream = types.InputFile(file_stream, filename='data')
     await delete_inline_key_only_first_msg(callback_query.message)
     await bot.send_document(chat_id=callback_query.message.chat.id, document=file_stream)
     await first_blood(callback_query.message)
@@ -130,7 +130,6 @@ async def get_user_data(callback_query: types.CallbackQuery):
 def callback_handlers(dp: Dispatcher) -> None:
     """ Регистрируем модули или функции """
     dp.register_callback_query_handler(mein_menu_answer, lambda call: call.data.startswith('start_'))
-    dp.register_callback_query_handler(upload_menu_call, lambda call: call.data.startswith('upload_'),
-                                       state=MyFlags.UPLOAD)
-    dp.register_callback_query_handler(moving_file, lambda call: call.data == 'apply_moving_file', state=MyFlags.UPLOAD)
+    dp.register_callback_query_handler(upload_menu_call, lambda call: call.data.startswith('upload_'), state=MyFlags.UPLOAD)
+    # dp.register_callback_query_handler(moving_file, lambda call: call.data == 'apply_moving_file', state=MyFlags.UPLOAD)
     dp.register_callback_query_handler(get_user_data, lambda call: call.data == 'user_data')
